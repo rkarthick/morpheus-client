@@ -15,6 +15,31 @@
     </head>
     <body>
 
+    <script type="text/x-handlebars" data-template-name="application">
+        <h1>Algosim</h1>
+        {{ outlet }}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="index">
+        Index it is!
+    </script>
+
+
+    <script type="text/x-handlebars" data-template-name="networks">
+        {{#each controller}}
+            {{ render "nodes" nodes }}
+        {{else}}
+            <p>Didn't find any network</p>
+        {{/each}}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="nodes">
+        {{#each controller}}
+            {{ edges }}
+        {{else}}
+            No nodes found!
+        {{/each}}
+    </script>
 
 
 
