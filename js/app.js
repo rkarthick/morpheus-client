@@ -1,3 +1,4 @@
+
 (function (win) {
 
     'use strict';
@@ -11,20 +12,12 @@
       this.resource('networks');
     });
 
-
     // Routes
     App.NetworksRoute = Ember.Route.extend({
-        model: function() {
+        model: function () {
             return App.Network.find();
         }
     });
-
-    // Models
-    App.Store = DS.Store.extend({
-        revision: 11,
-        adapter: 'DS.FixtureAdapter'
-    });
-
 
     // Network controller that manages to network model
     App.NetworkController = Ember.ObjectController.extend({
@@ -49,6 +42,12 @@
         }
     });
 
+
+    // Models
+    App.Store = DS.Store.extend({
+        revision: 11,
+        adapter: 'DS.FixtureAdapter'
+    });
 
     // the algorithm is kept global at the network level
     // coz of the assumption that all peers will execute the same algorithm
@@ -82,7 +81,6 @@
         data: DS.attr('string') // change it to JSON?
     });
 
-
     // Load temporary data
     App.Network.FIXTURES = [{
         id: 1,
@@ -105,7 +103,7 @@
         network: 1,
         edges: [2, 3],
         messageQ: []
-    },{
+    }, {
         id: 4,
         network: 1,
         edges: [3, 4],
