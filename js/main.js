@@ -1,11 +1,19 @@
 
 requirejs([
     'libs/jquery',
+    'libs/WorkerConsole',
+    'worker-globals',
     'libs/handlebars',
     'libs/ember',
     'libs/ember-data',
-    'app'
-]);
+    'app',
+    'executor',
+    'test'
+    ],
+    function() {
+        startTest();
+   }
+);
 
 /*
     <script src="js/libs/jquery.js"></script>

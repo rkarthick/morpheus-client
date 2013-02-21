@@ -5,6 +5,8 @@
     // Global app
     win.App = Ember.Application.create();
 
+    WorkerGlobals.App = win.App
+
     var NODES_LIMIT = 1000;
 
     // Router Map

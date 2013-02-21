@@ -1,0 +1,39 @@
+// functions used by the algorithm to interact
+// with dbsim.
+// TODO: Add google caja or adsafe support
+
+// this is is the worker thread
+
+importScripts('/js/app.js');
+
+
+onmessage = function(event) {
+    console.log("Message: " + event.data);
+}
+
+
+var neighbors = function () {
+    return true;
+};
+
+var messagesToReceive = function () {
+    return true;
+};
+
+var send = function (msg, node) {
+    return false;
+
+};
+
+var recieve = function () {
+    return true;
+};
+
+var message = function (msg) {
+    this.data = msg;
+};
+
+var log = function(msg) {
+
+    // console.log(msg);
+}
