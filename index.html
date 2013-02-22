@@ -24,14 +24,16 @@
         Index it is!
     </script>
 
-
     <script type="text/x-handlebars" data-template-name="networks">
-        {{#each controller}}
-            {{ render "nodes" nodes }}
-        {{else}}
-            <p>Didnt find any network</p>
+        {{# each controller }}
+            {{ this }}<a href="#" {{ action "startSimulations" this }}>Start</a>
         {{/each}}
     </script>
+
+    <script type="text/x-handlebars" data-template-name="messages">
+        {{ controller }}
+    </script>
+
 
     <script type="text/x-handlebars" data-template-name="nodes">
         {{#each controller}}

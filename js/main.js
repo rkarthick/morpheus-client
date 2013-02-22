@@ -1,24 +1,20 @@
+requirejs.config({
+    shim: {
+        'libs/ember': ['libs/jquery'],
+        'libs/ember-data': ['libs/ember'],
+        'app': ['libs/ember', 'libs/ember-data']
+    }
+})
 
 requirejs([
-    'libs/jquery',
-    'libs/WorkerConsole',
-    'worker-globals',
-    'libs/handlebars',
-    'libs/ember',
-    'libs/ember-data',
-    'app',
-    'executor',
-    'test'
-    ],
-    function() {
+        'libs/WorkerConsole',
+        'libs/jquery',
+        'libs/handlebars',
+        'libs/ember',
+        'libs/ember-data',
+        'app',
+        'executor',
+        'test'
+], function() {
         startTest();
-   }
-);
-
-/*
-    <script src="js/libs/jquery.js"></script>
-    <script src="js/libs/handlebars.js"></script>
-    <script src="js/libs/ember.js"></script>
-    <script src="js/libs/ember-data.js"></script>
-    <script src="js/app.js"></script>
-*/
+});

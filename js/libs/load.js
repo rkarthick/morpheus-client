@@ -1,9 +1,10 @@
 define([
         'libs/jquery',
-        'ember',
-        'ember'
+        'libs/ember',
+        'libs/ember-data'
 ], function() {
 
-        return Ember;
+    console.log(DS);
+    return Ember;
 
 });

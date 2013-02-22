@@ -4,16 +4,44 @@
 
 // this is is the worker thread
 
-importScripts('/js/app.js');
 
+
+var algoNeigh = null;
+var algoId = null;
+
+var initializeState = function (message) {
+    algoNeigh = message["neighbours"];
+    algoId = message["id"];
+};
 
 onmessage = function(event) {
-    console.log("Message: " + event.data);
-}
+    // get the JSON object
+    var message = JSON.parse(event.data);
 
+    switch(message["cmd"]) {
+        case "init":
+            initializeState(message);
+            runCodeBlock();
+        default:
+            // do nothing
+    }
 
-var neighbors = function () {
-    return true;
+};
+
+var getId = function() {
+    return algoId;
+};
+
+var getNeighbours = function () {
+    var neighbours = [];
+
+    var i = 0;
+    algoNeigh.forEach(function(){
+        neighbours[i] = algoNeigh[i]["nodeId"];
+        i++;
+    });
+
+    return neighbours;
 };
 
 var messagesToReceive = function () {
@@ -34,6 +62,11 @@ var message = function (msg) {
 };
 
 var log = function(msg) {
+    console.log(msg);
+};
 
-    // console.log(msg);
-}
+var runCodeBlock = function() {
+
+
+
+

@@ -1,3 +1,10 @@
+
+// TODO:
+// 1. Make this singleton pattern
+// 2. Currently this script handles ember objects, may be an ember api
+//    rather than playing with ember objects directly here
+// 3. Add functionality to add special variables for special nodes
+
 var Executor = function () {
 
     // Making it JS, automatically executes the script
@@ -5,11 +12,12 @@ var Executor = function () {
     // hence file without NO extension
     var HEADERJS = "js/algorithmlib",
         header = null,
-        // handleMessage from workers
-        handleMessage = function(event) {
-            console.log(event.data);
-        };
+        messageQ = null,
 
+        // messageHandler from workers
+        messageHandler = function (event) {
+            console.log(event.data);
+        },
 
         // get algolib from the server
         getAlgoLib = function () {
@@ -30,7 +38,7 @@ var Executor = function () {
             var finalScript = "(function(){ \n";
             finalScript = finalScript + header;
             finalScript = finalScript + script;
-            finalScript = finalScript + "\n }()); \n";
+            finalScript = finalScript + "\n}; } ()); \n";
             return finalScript;
         },
 
@@ -43,27 +51,69 @@ var Executor = function () {
             return getAlgoLib();
         },
 
+        createWorker = function (blob) {
+            var worker = new Worker(window.URL.createObjectURL(blob));
+            worker.onmessage = messageHandler;
+            return worker;
+        },
+
+        sendMessage = function (worker, message) {
+            worker.postMessage(message);
+        },
+
+        getInitData = function (node) {
+            var message = {};
+
+            message["cmd"] = "init";
+            message["id"]  = node.get("id");
+            message["neighbours"] = [];
+
+            // Populate neighbours
+            node.get("edges").forEach(function (edge) {
+                var targetEdge = null;
+                if(edge.get("firstEnd") === node) {
+                    targetEdge = "secondEnd";
+                } else {
+                    targetEdge = "firstEnd";
+                }
+                var n = {};
+                n["nodeId"] = edge.get(targetEdge).get("nodeId");
+                n["id"] = edge.get(targetEdge).get("id");
+                message["neighbours"].push(n);
+            });
+
+            return JSON.stringify(message);
+        },
+
         // this function starts the worker threads
-        startWorkers = function (script, workerCount) {
+        startWorkersInNode = function (script, nodes) {
             var blob = new Blob([script]),
                 workers  = Array();
-                i = null;
-            for (i = 0; i < workerCount; i++) {
-                // initializet the web workers
-                workers[i] = new Worker(window.URL.createObjectURL(blob));
-                workers[i].onmessage = handleMessage;
+                i = 0;
 
-                // signal thread to start execution
-                workers[i].postMessage("{cmd: 'start', data: '" + i  + "'}");
-            }
+            // create workers for each node
+            nodes.forEach(function (node) {
+                var initData = getInitData(node);
+                // DEBUG console.log(initData)
+                workers[i] = createWorker(blob);
+                sendMessage(workers[i], initData);
+                i++;
+            });
         };
 
 
     // main execution engine
-    this.startAlgorithm = function (algorithm, nodesCount) {
-       var scriptHeader = getHeader();
-       script = combineHeaderWithScript(scriptHeader, algorithm);
-       startWorkers(script, nodesCount);
+    this.start = function (algorithm, nodes, messages) {
+
+        // prepare the script for the thread
+        // TODO: safety check
+        var scriptHeader = getHeader();
+        script = combineHeaderWithScript(scriptHeader, algorithm);
+
+        messageQ = messages;
+
+        // Read data from network
+        startWorkersInNode(script, nodes);
     };
 
 };
