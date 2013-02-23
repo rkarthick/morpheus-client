@@ -13,6 +13,7 @@ requirejs([
         'libs/ember',
         'libs/ember-data',
         'app',
+        'util',
         'executor',
         'test'
 ], function() {

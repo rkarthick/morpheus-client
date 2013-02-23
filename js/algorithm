@@ -1,0 +1,59 @@
+
+var n = getNeighbours();
+var right = n[0];
+var status = "unknown";
+var msg = getId();
+
+while(1) {
+  if(msg !== null) {
+    send(right, msg);
+    if(msg === "END") {
+      exit;
+    }
+  }
+
+  msg = null;
+
+  if(messagesToReceive()) {
+    data = receive();
+    d = data.message;
+    if(d === "END") {
+      msg = "END";
+    } else if(parseInt(d) === getId()) {
+      msg = "END";
+      status = "leader";
+      console.log(getId() + " is the leader.");
+    } else if(parseInt(d) > getId()) {
+      msg = d;
+      // console.log(getId() + " is not the leader.");
+      status = "not leader";
+    }
+  }
+}
+
+
+
+
+
+/*
+var msg = null;
+if(getId() === 11) {
+  msg = "token";
+}
+
+var n = getNeighbours();
+while(1) {
+  debugger;
+  if(msg != null) {
+    send(n[0], msg);
+    if(getId() !== 11) exit;
+  }
+  msg = null;
+  for(var i = 0; i < messagesToReceive(); i++) {
+    data = receive();
+    msg = data.message;
+    if(getId() === 11) {
+      exit;
+    }
+  }
+}*/

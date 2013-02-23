@@ -29,7 +29,7 @@
     });
 
     App.IndexRoute = Ember.Route.extend({
-        redirect: function() {
+        redirect: function () {
             this.transitionTo('networks');
         }
     });
@@ -49,13 +49,15 @@
 
     App.NetworksController = Ember.ArrayController.extend({
         startSimulations: function (network) {
+            App.DefaultNetwork = network;
             var e = new Executor();
-            var alg = "log(getId()); \n";
-            alg += "log(getNeighbours());"
+            var alg = App.ReadAlgorithm();
 
             e.start(alg, network.get("nodes"), network.get("messageQ"));
         }
     });
+
+    App.DefaultNetwork = null;
 
     // Network controller that manages to network model
     App.NetworkController = Ember.ObjectController.extend({
@@ -121,6 +123,7 @@
         contents: DS.attr('string') // change it to JSON?
     });
 
+
     // Load temporary data
     App.Network.FIXTURES = [{
         id: 1,
@@ -142,19 +145,19 @@
         id: 2,
         nodeId: 12,
         network: 1,
-        edges: [1, 2],
+        edges: [2, 1],
         messageQ: []
     }, {
         id: 3,
         nodeId: 13,
         network: 1,
-        edges: [2, 3],
+        edges: [3, 2],
         messageQ: []
     }, {
         id: 4,
         nodeId: 14,
         network: 1,
-        edges: [3, 4],
+        edges: [4, 3],
         messageQ: []
     }];
 
@@ -187,6 +190,22 @@
         toNode: 2,
         contents: "foobar"
     }];
+
+
+    // Debug
+    var algorithm;
+    App.ReadAlgorithm = function () {
+            // make a synchronous jquery call to fetch algorithmlib.js
+            var jqxhr = $.ajax({
+                url: "js/algorithm",
+                success: function (data) {
+                    algorithm = data;
+                },
+                async: false
+            });
+            return algorithm;
+    };
+    // end of debug
 
 
 }());
