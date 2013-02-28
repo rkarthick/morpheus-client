@@ -12,9 +12,12 @@ requirejs([
         'libs/handlebars',
         'libs/ember',
         'libs/ember-data',
+        'libs/paper',
         'app',
         'util',
         'executor',
+        'node',
+        'network',
         'test'
 ], function() {
         startTest();
