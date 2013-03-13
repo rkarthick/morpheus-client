@@ -1,10 +1,17 @@
 define([
-        'libs/jquery',
-        'libs/ember',
-        'libs/ember-data'
-], function() {
-
-    console.log(DS);
-    return Ember;
-
+    'libs/require_plugins/order!libs/jquery',
+    'libs/require_plugins/order!libs/ember',
+    'libs/require_plugins/order!libs/ember-data',
+    'libs/require_plugins/order!libs/paper',
+    'libs/require_plugins/order!libs/WorkerConsole',
+    'libs/require_plugins/order!libs/handlebars',
+    'libs/require_plugins/order!libs/jquery-ui',
+    'libs/require_plugins/order!libs/jquery-numeric',
+    'libs/require_plugins/order!util'
+], function () {
+    'use strict';
+    return {
+        Ember: Ember,
+        DS: DS
+    };
 });
