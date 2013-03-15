@@ -1,8 +1,9 @@
 
 
 define([
-    'libs/load'
-], function (lib) {
+    'libs/load',
+    'executor'
+], function (lib, Executor) {
 
     'use strict';
 
@@ -12,14 +13,193 @@ define([
         nodes: {},
         content: [],
         edgesCount: 0,
-
+        deliveredMessages: {},
         view: null,
+        executor: null,
 
         setView: function (view) {
             this.view = view;
         },
 
-        // TODO: Implement Delete node, edges
+        startSimulations: function (algorithm) {
+            this.executor = new Executor();
+            this.executor.start(
+                algorithm,
+                this
+            );
+        },
+
+        nodeShout: function (message, nodeId) {
+            this.nodes[nodeId].get("view").shout(message);
+        },
+
+        setNodesColor: function (bgColor, fgColor) {
+            var key;
+            for (key in this.nodes) {
+                var node = this.nodes[key];
+                node.get("view").setColor(bgColor, fgColor);
+            }
+        },
+
+        setNodeColor: function (bgColor, fgColor, nodeId) {
+            this.nodes[nodeId].get("view").setColor(bgColor, fgColor);
+        },
+
+        setupStartRounds: function () {
+            this.setNodesColor(ENV.node_bgcolor_active, ENV.node_fgcolor_active);
+            this.get("view").deSelectAll();
+            this.get("view").changeMode(ENV.SIMULMODE);
+            this.get("view").showBanner();
+            this.get("view").updateBannerText(1);
+        },
+
+        cleanUpRounds: function () {
+            this.setNodesColor(ENV.node_bgcolor, ENV.node_fgcolor);
+            this.get("view").changeMode(ENV.EDITMODE);
+            this.get("view").removeBanner();
+            // TODO: try to get this gracefully
+            App.rootcontroller.set("shouldDisable", false);
+        },
+
+        isAnimationComplete: function () {
+            var key = null;
+            for (key in this.deliveredMessages) {
+                if (this.deliveredMessages[key] === false) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
+        waitForView: function (roundNumber) {
+            var networkObj = this;
+
+            var waitForAnimation = function () {
+                if (networkObj.isAnimationComplete() !== true) {
+                    setTimeout(waitForAnimation, 50);
+                    return;
+                } else {
+                    networkObj.get("view").updateBannerText(roundNumber + 1);
+                    networkObj.executor.signalStartNewRound();
+                }
+            };
+            waitForAnimation();
+        },
+
+        messageAnimationComplete: function (message) {
+            this.deliveredMessages[message.get("id")] = true;
+        },
+
+        signalNodeDeath: function (nodeId) {
+            this.nodes[nodeId].get("view").setColor(
+                ENV.node_bgcolor_dead,
+                ENV.node_fgcolor_dead
+            );
+        },
+
+        getAngleWrtXAxis: function (v1) {
+            var v2 = {x: 1, y: 0},
+                angleRad = Math.acos((v1.x * v2.x + v1.y * v2.y) /
+                            (Math.sqrt(v1.x * v1.x + v1.y * v1.y) * Math.sqrt(v2.x * v2.x + v2.y * v2.y))),
+                angleDeg = angleRad * 180 / Math.PI;
+
+            return angleDeg;
+        },
+
+        getSortedNeighbours: function (nodeId) {
+            var graphNodes = {},
+                i,
+                angles = [],
+                nidAngles = {},
+                neighbours = [];
+
+            var neighbourIds = this.nodes[nodeId].getNeighbours();
+            var cPoint = this.nodes[nodeId].get("view").getCenter();
+
+            // find in a ring with origin as nodeId's center,
+            // where does the neighbor lie?
+            for (i = 0; i < neighbourIds.length; i = i + 1) {
+                var nId = neighbourIds[i];
+                var nPoint = this.nodes[nId].get("view").getCenter();
+                var rPoint = {};
+
+                rPoint.x = nPoint.x - cPoint.x;
+                rPoint.y = cPoint.y - nPoint.y;
+
+                var angle = this.getAngleWrtXAxis(rPoint);
+                var sub = 0;
+
+                // 4th quadrant
+                if (rPoint.x < 0 && rPoint.y >= 0) {
+                    angle = -1 * (360 - angle);
+                }
+                // 3rd quadrant
+                if (rPoint.x <= 0 && rPoint.y < 0) {
+                    angle = -1 * (angle);
+                }
+                // 2nd Quadrant
+                if (rPoint.x > 0 && rPoint.y <= 0) {
+                    angle = 90 - angle;
+                }
+                // 1st Quardrant
+                if (rPoint.x >= 0 && rPoint.y > 0) {
+                    angle = angle + 90;
+                }
+
+                angles.push(angle);
+                nidAngles[angle] = nId;
+            }
+
+            // descending order sort
+            angles.sort(function (a, b) { return b - a; });
+
+            for (i = 0; i < angles.length; i = i + 1) {
+                neighbours[i] = nidAngles[angles[i]];
+            }
+
+            return neighbours;
+        },
+
+        messageDelivered: function (obj) {
+            var controllerObj = obj;
+            this.content.get("messageQ").forEach(function (message) {
+
+                if (message.get("delivered") === true &&
+                        !controllerObj.deliveredMessages.hasOwnProperty(message.get("id"))) {
+                    controllerObj.get("view").deliverMessage(
+                        message.get("fromNode").get("nodeId"),
+                        message.get("toNode").get("nodeId"),
+                        message
+                    );
+                    controllerObj.deliveredMessages[message.get("id")] = false;
+                }
+            });
+        }.observes("content.messageQ.@each.delivered"),
+
+        getEdgeByNodeIds: function (firstNodeId, secondNodeId) {
+            var edges = this.content.get("edges"),
+                i;
+            for (i = 0; i < edges.get("length"); i = i + 1) {
+                var edge = edges.objectAt(i);
+                if (edge.get("firstEnd").get("nodeId") === firstNodeId &&
+                        edge.get("secondEnd").get("nodeId") === secondNodeId) {
+                    return edge;
+                }
+
+                if (edge.get("firstEnd").get("nodeId") === secondNodeId &&
+                        edge.get("secondEnd").get("nodeId") === firstNodeId) {
+                    return edge;
+                }
+            }
+            return null;
+        },
+
+        // remove the edge from the model!
+        removeEdge: function (firstNodeId, secondNodeId) {
+            var edge = this.getEdgeByNodeIds(firstNodeId, secondNodeId);
+            edge.deleteRecord();
+        },
+
         createEdge: function () {
             var edgesLength = this.get("edges").get("length");
             if (edgesLength <= this.edgesCount) {
@@ -44,22 +224,13 @@ define([
             var edges = this.content.get("edges"),
                 i = null;
 
-            // check if the edge already exists
-            for (i = 0; i < edges.get("length"); i = i + 1) {
-                var edge = edges.objectAt(i);
-                if (edge.get("firstEnd").get("nodeId") === firstNodeId &&
-                        edge.get("secondEnd").get("nodeId") === secondNodeId) {
-                    return;
-                }
-
-                if (edge.get("firstEnd").get("nodeId") === secondNodeId &&
-                        edge.get("secondEnd").get("nodeId") === firstNodeId) {
-                    return;
-                }
+            // check if there is already a edge
+            if (this.getEdgeByNodeIds(firstNodeId, secondNodeId) !== null) {
+                return;
             }
 
             // create the new edge
-            var firstEnd = this.nodes[firstNodeId].content;
+            var firstEnd  = this.nodes[firstNodeId].content;
             var secondEnd = this.nodes[secondNodeId].content;
             var edgeModel = App.Edge.createRecord({
                     network: this.get("model"),
@@ -70,29 +241,36 @@ define([
             firstEnd.get("edges").addObject(edgeModel);
             secondEnd.get("edges").addObject(edgeModel);
             this.content.get("edges").addObject(edgeModel);
-
         },
 
         createNewNode: function (nodeId) {
             nodeId = parseInt(nodeId, 10);
             if (!this.nodes.hasOwnProperty(nodeId)) {
                 this.nodes[nodeId] = App.NodeController.create({nodeId: nodeId, network: this});
+                return this.nodes[nodeId];
             } else {
                 alert("Node with id: " + nodeId + " already exists.");
             }
         },
 
-        removeNode: function (nodeId) {
+        removeNode: function (nodeId, edges) {
+            var i;
             nodeId = parseInt(nodeId, 10);
             if (!this.nodes.hasOwnProperty(nodeId)) {
                 throw "Node is deleted already.";
             }
 
+            var neighbours = this.nodes[nodeId].getNeighbours();
+            for (i = 0; i < neighbours.length; i = i + 1) {
+                this.nodes[neighbours[i]].removeEdges(edges);
+            }
+
+
             this.nodes[nodeId].remove();
             delete this.nodes[nodeId];
+
             // TODO: Move it to observable
             // remove from view
-
             this.get("view").removeNode(nodeId);
         }
 

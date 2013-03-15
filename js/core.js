@@ -22,6 +22,24 @@ define([
 
     });
 
+    App.rootcontroller = null;
+    App.ApplicationController = Ember.Controller.extend({
+        shouldDisable: false,
+        getAlgorithm: function () {
+            return App.ReadAlgorithm();
+        },
+
+        startSimulations: function () {
+            App.rootcontroller = this;
+            this.controllerFor("network").startSimulations(this.getAlgorithm());
+            this.set("shouldDisable", true);
+        }
+    });
+
+    App.ButtonField = Ember.Button.extend({
+        disabledBinding: "target.mainController.shouldDisable"
+    });
+
     App.Store = DS.Store.extend({
         revision: 11,
         adapter: 'DS.FixtureAdapter'
@@ -37,6 +55,20 @@ define([
 
     App.Edge = models.Edge;
     App.Message = models.Message;
+
+    // Debug
+    var algorithm;
+    App.ReadAlgorithm = function () {
+        // make a synchronous jquery call to fetch algorithmlib.js
+        var jqxhr = $.ajax({
+            url: "js/algorithm",
+            success: function (data) {
+                algorithm = data;
+            },
+            async: false
+        });
+        return algorithm;
+    };
 
     return App;
 });

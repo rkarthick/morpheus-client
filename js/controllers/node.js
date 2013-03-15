@@ -21,6 +21,27 @@ define([
             }
         }.observes('content'),
 
+        messageAnimationComplete: function (message) {
+            this.network.messageAnimationComplete(message);
+        },
+
+        getNeighbours: function () {
+            var neighbours = [];
+            // Populate neighbours
+            var node = this.content;
+            this.get("edges").forEach(function (edge) {
+                var targetEdge = null;
+                if (edge.get("firstEnd") === node) {
+                    targetEdge = "secondEnd";
+                } else {
+                    targetEdge = "firstEnd";
+                }
+                neighbours.push(edge.get(targetEdge).get("nodeId"));
+            });
+
+            return neighbours;
+        },
+
         init: function () {
             this._super();
 
@@ -41,6 +62,13 @@ define([
             }
 
             this.content.deleteRecord();
+        },
+
+        removeEdges: function (edges) {
+            var nodeObject = this;
+            edges.forEach(function (edge) {
+                nodeObject.get("view").removeEdge(edge);
+            });
         }
     });
 });

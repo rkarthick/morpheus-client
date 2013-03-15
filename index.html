@@ -18,6 +18,7 @@
     <script type="text/x-handlebars" data-template-name="application">
         <div class="canvas">
             {{ render "network" }}
+            <button {{action "startSimulations" disabled}} {{bindAttr disabled="controller.shouldDisable"}}>Start Simulations</button>
         </div>
     </script>
 
