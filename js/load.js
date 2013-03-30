@@ -13,9 +13,6 @@ define([
     'use strict';
     window.App = app;
 
-    paper.install(window);
-
-
     // move this to a separate init file
     $("#dialog-form").dialog({
         autoOpen: false,

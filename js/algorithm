@@ -1,5 +1,6 @@
 var n = getNeighbours();
-var right = n[0];
+var right = getTemplateHelper();
+
 var status = "unknown";
 var msg = getId();
 

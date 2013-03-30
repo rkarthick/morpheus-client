@@ -1,8 +1,13 @@
 ENV = typeof ENV !== 'undefined' ? ENV : {
-    canvas_height: 700,
-    canvas_width: 700,
+    canvas_height_small: 600,
+    canvas_width_small: 557,
+    canvas_height_big: 700,
+    canvas_width_big: 1116,
+    canvas_height: 600,
+    canvas_width: 557,
+    layout: [],
     edgeThreshold: 18,
-    background_color: "#3d3d3d",
+    background_color: "#363838",
     hitOptions: {
         segments: true,
         stroke: true,
@@ -17,9 +22,9 @@ ENV = typeof ENV !== 'undefined' ? ENV : {
     node_fgcolor_dead: "#3d3d3d",
     node_bgcolor_active: "#D4B255",
     node_fgcolor_active: "#211F01",
-    node_font_size: 19,
+    node_font_size: 15,
     node_font: "Arial",
-    node_radius: 23,
+    node_radius: 20,
     edge_color: "#a1a1a1",
     edge_stroke_width: 5,
     edge_color_current: "white",
@@ -34,8 +39,18 @@ ENV = typeof ENV !== 'undefined' ? ENV : {
     SIMULMODE: 1,
     EDITMODE: 2,
     banner_bgcolor: "black",
-    banner_width: 100,
-    banner_height: 100,
-    banner_fgcolor: "white",
-    banner_font_size: 50
+    banner_width: 60,
+    banner_height: 60,
+    banner_fgcolor: "#00FF80",
+    banner_font_size: 35,
+    layout_small: 0,
+    layout_big: 1
 };
+
+ENV.layout[0] = {};
+ENV.layout[0].width = ENV.canvas_width_small;
+ENV.layout[0].height = ENV.canvas_height_small;
+
+ENV.layout[1] = {};
+ENV.layout[1].width = ENV.canvas_width_big;
+ENV.layout[1].height = ENV.canvas_height_big;

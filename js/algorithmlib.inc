@@ -5,14 +5,18 @@
 // this is is the worker thread
 var algoNeigh = null;
 var algoId = null;
+var algoNeighLocation = null;
 var inMessageQ = [];
 var outMessageQ = [];
+var templateObject = null;
 var code = null;
 
 // message id carries the id for the thread, initially
 var initializeState = function (message) {
     algoNeigh = message.neighbours;
     algoId = message.id;
+    algoNeighLocation = message.neighboursLocation;
+    templateObject = message.templateObject;
 };
 
 // At the start of every round, combine the messageQ array
@@ -61,9 +65,13 @@ onmessage = function(event) {
 
 };
 
-var getId = function() {
+var getId = function () {
     return algoId;
 };
+
+var getTemplateHelper = function () {
+    return templateObject;
+}
 
 var getNeighbours = function () {
     var neighbours = [];
@@ -75,6 +83,10 @@ var getNeighbours = function () {
     });
 
     return neighbours;
+};
+
+var getNeighboursWithLocation = function () {
+    return algoNeighLocation;
 };
 
 var messagesToReceive = function () {

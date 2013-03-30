@@ -26,6 +26,8 @@ define([
             workers = [],
             currentNetwork = null,
             currentNetworkController = null,
+            allNodesTerminated = false,
+            startWorkerCount = 0,
 
             // Get node from the worker object
             getNode = function (current_worker) {
@@ -132,6 +134,7 @@ define([
                 var message = {};
 
                 message.cmd = "round";
+                startWorkerCount = workers.length;
 
                 workers.forEach(function (worker) {
                     message.messages = getWorkerMessage(worker.node);
@@ -144,7 +147,7 @@ define([
             stopAllWorkers = function () {
                 workers.forEach(function (worker) {
                     currentNetworkController.signalNodeDeath(
-                        workers[i].node.get("nodeId")
+                        worker.node.get("nodeId")
                     );
                     worker.worker.terminate();
                 });
@@ -191,24 +194,31 @@ define([
                 });
             },
 
-            // proceed if all the live workers have given the completed signal
-            // stillActive == true when sent from active thread
-            checkAndStartNewRound = function () {
+            checkIfAllWorkerAreDead = function () {
                 // all the workers are terminated
-                if (workers.length === 0) {
+                if (workers.length === 0 && allNodesTerminated === false) {
                     console.log("=======================================");
                     console.log("Total number of rounds: " + roundsCount);
                     console.log("Total number of messages: " + messageQ.length);
-                    currentNetworkController.cleanUpRounds();
+                    currentNetworkController.waitForView(roundsCount + 1);
 
+                    allNodesTerminated = true;
+                    return true;
+                }
+
+                return allNodesTerminated;
+            },
+
+            // proceed if all the live workers have given the completed signal
+            // stillActive == true when sent from active thread
+            checkAndStartNewRound = function () {
+                if (checkIfAllWorkerAreDead() === true) {
                     return;
                 }
 
-                // When there are more message received that
-                // the current worker length, "More (>=)" when workers die inbetween
-                if (receivedMessages >= workers.length) {
+                // When we have heard from all the workers, start a new round
+                if (receivedMessages === startWorkerCount) {
                     roundsCount = roundsCount + 1;
-                    console.log("starting  round #" + (roundsCount));
                     receivedMessages = 0;
                     transferMessages();
 
@@ -216,7 +226,6 @@ define([
                 }
 
             },
-
 
             // closeWorkerThread()
             closeWorkerThread = function (worker) {
@@ -235,30 +244,20 @@ define([
                 );
 
                 workers.remove(i);
-
+                // check if the workers arry is empty
+                checkIfAllWorkerAreDead();
             },
 
             // messageHandler from workers
             messageHandler = function (event) {
                 var message = JSON.parse(event.data);
-                switch (message.cmd) {
 
-                case "round_end":
-                    loadMessageQ(event.srcElement, message.messages);
-                    // check if new round should be started
-                    checkAndStartNewRound();
-                    break;
-
-                case "close":
-                    loadMessageQ(event.srcElement, message.messages);
+                loadMessageQ(event.srcElement, message.messages);
+                if (message.cmd === "close") {
                     closeWorkerThread(event.srcElement);
-                    checkAndStartNewRound();
-                    break;
-
-                default:
-                    // TODO: throw this should not be reached exception
-
                 }
+
+                checkAndStartNewRound();
             },
 
             // get algolib from the server
@@ -325,22 +324,19 @@ define([
                 message.cmd = "init";
                 message.id  = node.get("nodeId");
                 message.neighbours = [];
-
-                // // Populate neighbours
-                // node.get("edges").forEach(function (edge) {
-                //     var targetEdge = null;
-                //     if (edge.get("firstEnd") === node) {
-                //         targetEdge = "secondEnd";
-                //     } else {
-                //         targetEdge = "firstEnd";
-                //     }
-                //     var n = {};
-                //     n.id = edge.get(targetEdge).get("nodeId");
-                //     message.neighbours.push(n);
-                // });
+                message.neighboursLocation = {};
+                message.templateObject = [];
 
                 // get sorted neighbours from the controller
                 message.neighbours = currentNetworkController.getSortedNeighbours(
+                    node.get("nodeId")
+                );
+
+                message.neighboursLocation = currentNetworkController.getNeighboursWithLocation(
+                    node.get("nodeId")
+                );
+
+                message.templateObject = currentNetworkController.getTemplateObject(
                     node.get("nodeId")
                 );
 
@@ -387,14 +383,28 @@ define([
             startWorkersInNode(script, nodes);
         };
 
+        this.cancelExecution = function () {
+            stopAllWorkers();
+        };
+
         this.signalStartNewRound = function () {
-            startNewRound();
-            messageForWorkers = {};
+
+            if (workers.length === 0) {
+                return currentNetworkController.cleanUpRounds();
+            }
+
             if (roundsCount === 100) {
                 // TODO: throw error
                 stopAllWorkers();
+                alert("Algorithm running forever in few nodes. Canceling execution.");
+                currentNetworkController.cleanUpRounds();
                 return;
             }
+
+            console.log("starting  round #" + (roundsCount));
+
+            startNewRound();
+            messageForWorkers = {};
         };
 
     };

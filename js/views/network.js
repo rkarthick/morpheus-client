@@ -115,7 +115,7 @@ define([
 
         removeNode: function (nodeId) {
             this.nodes[nodeId].remove();
-            delete this.nodes[selectedItem.nodeId];
+            delete this.nodes[nodeId];
             paper.view.draw();
         },
 
@@ -406,10 +406,10 @@ define([
                 fontSize: 10,
                 fillColor: "white"
             };
-            roundsText.bounds.center = new Point(
+            roundsText.bounds.center = new paper.Point(
                 ((banner.bounds.topLeft.x + banner.bounds.topRight.x) / 2),
                 5
-            )
+            );
 
 
             roundsText.moveAbove(banner);
@@ -428,7 +428,7 @@ define([
             };
             this.bannerText.bounds.center = new paper.Point(
                 this.bannerContainer.bounds.center.x,
-                this.bannerContainer.bounds.center.y - (ENV.banner_font_size / 4)
+                this.bannerContainer.bounds.center.y - (ENV.banner_font_size / 4) + 5
             );
         },
 
@@ -438,12 +438,67 @@ define([
             this.bannerContainer = this.bannerText = null;
         },
 
+        changeElementsLocation: function () {
+            var i,
+                key;
+
+            var sign = -1;
+
+            if (this.width === ENV.canvas_width_big) {
+                sign = 1;
+            }
+
+            for (key in this.nodes) {
+                var node = this.nodes[key];
+
+                var x = node.getCenter().x;
+                var y = node.getCenter().y;
+                console.log(x + ", " + y);
+
+                x = x + (sign * (ENV.canvas_width_big - ENV.canvas_width_small) / 2);
+                y = y + (sign * (ENV.canvas_height_big - ENV.canvas_height_small) / 2);
+
+                node.moveTo(new paper.Point(x, y));
+            }
+            paper.view.draw();
+
+            if (this.bannerContainer !== null) {
+                var container = this.bannerContainer.children[0];
+                container.bounds.center = new paper.Point(
+                    ENV.canvas_width - (ENV.banner_width / 2),
+                    ENV.banner_height / 2
+                );
+
+                this.bannerContainer.children[1].bounds.center = new paper.Point(
+                    ((container.bounds.topLeft.x + container.bounds.topRight.x) / 2),
+                    5
+                );
+            }
+
+
+
+            $('html, body').animate({scrollTop: (sign * ENV.canvas_height_big)}, '50');
+        },
+
+        changeLayout: function (layout) {
+            this.set("height", ENV.layout[layout].height);
+            this.set("width", ENV.layout[layout].width);
+
+            $("#simulator").height(this.height);
+            $("#simulator").width(this.width);
+
+            var paperSize = new paper.Size(this.width, this.height);
+
+            paper.view.viewSize = paperSize;
+            this.changeElementsLocation();
+        },
+
 
         didInsertElement: function () {
             var i;
             this._super();
 
-            paper.install(window);
+            // paper.install(window);
 
             ENV.canvas = get(this, "element");
             ENV.ctx = ENV.canvas.getContext('2d');
@@ -461,68 +516,6 @@ define([
             paper.view.draw();
 
             this.get("controller").setView(this);
-
-            // Testing
-            var n1 = this.get("controller").createNewNode(10);
-            var n2 = this.get("controller").createNewNode(20);
-            var n3 = this.get("controller").createNewNode(30);
-            var n4 = this.get("controller").createNewNode(40);
-            // var n5 = this.get("controller").createNewNode(50);
-            // var n6 = this.get("controller").createNewNode(60);
-            // var n7 = this.get("controller").createNewNode(70);
-            // var n8 = this.get("controller").createNewNode(80);
-            // var n9 = this.get("controller").createNewNode(90);
-
-            n1.get("view").moveTo(new paper.Point(200, 100));
-            n2.get("view").moveTo(new paper.Point(439, 100));
-            n3.get("view").moveTo(new paper.Point(450, 400));
-            n4.get("view").moveTo(new paper.Point(200, 400));
-
-            // n5.get("view").moveTo(new paper.Point(300, 500));
-
-            // n6.get("view").moveTo(new paper.Point(150, 300));
-            // n7.get("view").moveTo(new paper.Point(100, 200));
-
-            // n8.get("view").moveTo(new paper.Point(150, 100));
-            // n9.get("view").moveTo(new paper.Point(300, 50));
-
-
-            this.get("controller").connectNodes(10, 20);
-            this.get("controller").connectNodes(20, 30);
-            this.get("controller").connectNodes(30, 40);
-            this.get("controller").connectNodes(40, 10);
-            // this.get("controller").connectNodes(10, 60);
-            // this.get("controller").connectNodes(10, 70);
-            // this.get("controller").connectNodes(10, 80);
-            // this.get("controller").connectNodes(10, 90);
-            // this.showBanner();
-            paper.view.draw();
-
-
-            // console.log(this.get("controller").getSortedNeighbours(10));
-
-            // // create message
-            // var m = App.Message.createRecord({
-            //         network: this.get("controller").get("model"),
-            //         fromNode: n1.get("model"),
-            //         toNode: n2.get("model"),
-            //         delivered: false,
-            //         contents: "i=10"
-            //     });
-
-            // this.get("controller").content.get("messageQ").addObject(m);
-            // m.set("delivered", true);
-
-            // m = App.Message.createRecord({
-            //     network: this.get("controller").get("model"),
-            //     fromNode: n2.get("model"),
-            //     toNode: n1.get("model"),
-            //     delivered: false,
-            //     contents: "i=11"
-            // });
-            // this.get("controller").content.get("messageQ").addObject(m);
-            // m.set("delivered", true);
-
         }
     });
 });

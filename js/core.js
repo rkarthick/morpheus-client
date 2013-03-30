@@ -3,10 +3,15 @@ define([
     'libs/load',
     'controllers/network',
     'controllers/node',
+    'controllers/template',
+    'controllers/editor',
     'views/network',
     'views/node',
-    'models'
-], function (lib, networkController, nodeController, networkView, nodeView, models) {
+    'views/editor',
+    'views/template',
+    'models',
+    'templatemodel'
+], function (lib, networkController, nodeController, templateController, editorController, networkView, nodeView, editorView, templateView, models, templateModel) {
     'use strict';
 
     var Ember = lib.Ember;
@@ -24,15 +29,103 @@ define([
 
     App.rootcontroller = null;
     App.ApplicationController = Ember.Controller.extend({
-        shouldDisable: false,
+        currentlyRunning: false,
+        currentLayout: ENV.layout_small,
         getAlgorithm: function () {
             return App.ReadAlgorithm();
         },
 
-        startSimulations: function () {
+        init: function () {
             App.rootcontroller = this;
-            this.controllerFor("network").startSimulations(this.getAlgorithm());
-            this.set("shouldDisable", true);
+        },
+
+        render: function (templateName) {
+            this.controllerFor('template').render(templateName);
+        },
+
+        stopSimulation: function () {
+            if (this.currentlyRunning === false) {
+                return;
+            }
+            this.controllerFor("network").cancelSimulation();
+
+            this.executionFinished();
+        },
+
+        executionFinished: function () {
+            this.set("currentlyRunning", false);
+            $(".addnode").removeClass("disabled");
+
+            $(".startsimulation").removeClass("disabled");
+            $(".pausesimulation").addClass("disabled");
+            $(".gonextstep").addClass("disabled");
+            $(".stopsimulation").addClass("disabled");
+        },
+
+        pauseSimulation: function () {
+            if (this.currentlyRunning === false) {
+                return;
+            }
+
+            this.controllerFor("network").pauseSimulation();
+            $(".pausesimulation").addClass("disabled");
+            $(".startsimulation").removeClass("disabled");
+            $(".gonextstep").removeClass("disabled");
+        },
+
+        resumeSimulation: function () {
+            this.controllerFor("network").resumeSimulation();
+
+            $(".startsimulation").addClass("disabled");
+            $(".pausesimulation").removeClass("disabled");
+            $(".gonextstep").addClass("disabled");
+            $(".stopsimulation").removeClass("disabled");
+        },
+
+        goNextStep: function () {
+            this.controllerFor("network").goToNextRound();
+        },
+
+        startSimulations: function () {
+            if (this.currentlyRunning === true) {
+                this.resumeSimulation();
+                return;
+            }
+
+            App.rootcontroller = this;
+
+            this.controllerFor("network").startSimulations(
+                this.controllerFor("editor").getAlgorithm()
+            );
+            this.set("currentlyRunning", true);
+            $(".addnode").addClass("disabled");
+
+            $(".startsimulation").addClass("disabled");
+            $(".pausesimulation").removeClass("disabled");
+            $(".gonextstep").addClass("disabled");
+            $(".stopsimulation").removeClass("disabled");
+        },
+
+        changeLayout: function () {
+            if (this.currentLayout === ENV.layout_small) {
+                this.currentLayout = ENV.layout_big;
+                $(".expandlayout").addClass("shrinklayout");
+                $(".expandlayout").removeClass("expandlayout");
+            } else {
+                this.currentLayout = ENV.layout_small;
+                $(".shrinklayout").addClass("expandlayout");
+                $(".expandlayout").removeClass("shrinklayout");
+            }
+
+            this.controllerFor("network").changeLayout(this.currentLayout);
+            this.controllerFor("editor").changeLayout(this.currentLayout);
+        },
+
+        addNode: function () {
+            if (this.currentlyRunning === true) {
+                return;
+            }
+            this.controllerFor("network").createNewNodeFromDialog();
         }
     });
 
@@ -56,6 +149,14 @@ define([
     App.Edge = models.Edge;
     App.Message = models.Message;
 
+    App.EditorController = editorController;
+    App.EditorView = editorView;
+
+    App.TemplateView = templateView;
+    App.TemplateController = templateController;
+
+    App.TemplateModel = templateModel;
+
     // Debug
     var algorithm;
     App.ReadAlgorithm = function () {
@@ -72,3 +173,8 @@ define([
 
     return App;
 });
+
+
+// Ember.Select
+//     contentBinding="App.NodeTemplates.content"
+//     valueBinding="App.NodeTemplates.value"

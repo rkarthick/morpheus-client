@@ -189,7 +189,7 @@ define([
             var rectangle = new paper.Rectangle(tl, br);
             var roundedRectangle = new paper.Path.RoundRectangle(
                 rectangle,
-                new Size(10, 10)
+                new paper.Size(10, 10)
             );
             roundedRectangle.fillColor = ENV.shout_bgcolor;
 

@@ -1,5 +1,3 @@
-
-
 define([
     'libs/load',
     'executor'
@@ -16,6 +14,43 @@ define([
         deliveredMessages: {},
         view: null,
         executor: null,
+        templateObject: null,
+        pauseSimulationFlag: false,
+        killSimulationFlag: false,
+
+        clear: function () {
+            var key = 0;
+            for (key in this.nodes) {
+                var node = this.nodes[key];
+                this.removeNode(
+                    key,
+                    node.get("view").getEdges()
+                );
+            }
+            this.nodes = {};
+        },
+
+        cancelSimulation: function () {
+            this.set("killSimulationFlag", true);
+            if (this.pauseSimulationFlag === true) {
+                this.waitForView(100);
+            }
+        },
+
+        pauseSimulation: function () {
+            this.set("pauseSimulationFlag", true);
+        },
+
+        resumeSimulation: function () {
+            if (this.pauseSimulationFlag === true) {
+                this.set("pauseSimulationFlag", false);
+                this.executor.signalStartNewRound();
+            }
+        },
+
+        goToNextRound: function () {
+            this.executor.signalStartNewRound();
+        },
 
         setView: function (view) {
             this.view = view;
@@ -47,6 +82,8 @@ define([
 
         setupStartRounds: function () {
             this.setNodesColor(ENV.node_bgcolor_active, ENV.node_fgcolor_active);
+            this.set("pauseSimulationFlag", false);
+            this.set("killSimulationFlag", false);
             this.get("view").deSelectAll();
             this.get("view").changeMode(ENV.SIMULMODE);
             this.get("view").showBanner();
@@ -58,7 +95,8 @@ define([
             this.get("view").changeMode(ENV.EDITMODE);
             this.get("view").removeBanner();
             // TODO: try to get this gracefully
-            App.rootcontroller.set("shouldDisable", false);
+
+            App.rootcontroller.executionFinished();
         },
 
         isAnimationComplete: function () {
@@ -79,8 +117,15 @@ define([
                     setTimeout(waitForAnimation, 50);
                     return;
                 } else {
+                    if (networkObj.killSimulationFlag === true) {
+                        networkObj.executor.cancelExecution();
+                        networkObj.cleanUpRounds();
+                        return;
+                    }
+                    if (networkObj.pauseSimulationFlag === false) {
+                        networkObj.executor.signalStartNewRound();
+                    }
                     networkObj.get("view").updateBannerText(roundNumber + 1);
-                    networkObj.executor.signalStartNewRound();
                 }
             };
             waitForAnimation();
@@ -104,6 +149,49 @@ define([
                 angleDeg = angleRad * 180 / Math.PI;
 
             return angleDeg;
+        },
+
+        getTemplateObject: function (nodeId) {
+            if (this.templateObject !== null) {
+                return this.templateObject[nodeId];
+            }
+
+            return null;
+        },
+
+        getNeighboursWithLocation: function (nodeId) {
+            var neighbours = {},
+                i = 0;
+            neighbours.topLeft = [];
+            neighbours.bottomLeft = [];
+            neighbours.topRight = [];
+            neighbours.bottomRight = [];
+
+            var neighbourIds = this.nodes[nodeId].getNeighbours();
+            var cPoint = this.nodes[nodeId].get("view").getCenter();
+
+            for (i = 0; i < neighbourIds.length; i = i + 1) {
+                var nId = neighbourIds[i];
+                var nPoint = this.nodes[nId].get("view").getCenter();
+
+                if (nPoint.x < cPoint.x && nPoint.y < cPoint.y) {
+                    neighbours.topLeft.push(nId);
+                }
+
+                if (nPoint.x < cPoint.x && nPoint.y > cPoint.y) {
+                    neighbours.bottomLeft.push(nId);
+                }
+
+                if (nPoint.x > cPoint.x && nPoint.y < cPoint.y) {
+                    neighbours.topRight.push(nId);
+                }
+
+                if (nPoint.x > cPoint.x && nPoint.y > cPoint.y) {
+                    neighbours.bottomRight.push(nId);
+                }
+            }
+
+            return neighbours;
         },
 
         getSortedNeighbours: function (nodeId) {
@@ -249,8 +337,27 @@ define([
                 this.nodes[nodeId] = App.NodeController.create({nodeId: nodeId, network: this});
                 return this.nodes[nodeId];
             } else {
-                alert("Node with id: " + nodeId + " already exists.");
+                return null;
             }
+        },
+
+        createNewNodeFromDialog: function () {
+            this.get("view").createNewNode();
+        },
+
+        createRandomNewNode: function () {
+            var node = this.createNewNode(Math.floor((Math.random() * 1000) + 1));
+            while (node === null) {
+                node = this.createNewNode(Math.floor((Math.random() * 1000) + 1));
+            }
+            return node;
+        },
+
+        changeLayout: function (layout) {
+            ENV.canvas_width = ENV.layout[layout].width;
+            ENV.canvas_height = ENV.layout[layout].height;
+
+            this.get("view").changeLayout(layout);
         },
 
         removeNode: function (nodeId, edges) {
@@ -273,7 +380,5 @@ define([
             // remove from view
             this.get("view").removeNode(nodeId);
         }
-
-
     });
 });

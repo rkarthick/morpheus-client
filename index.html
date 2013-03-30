@@ -10,21 +10,74 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="css/foundation.css">
         <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" href="css/foundation.css">
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
     <script type="text/x-handlebars" data-template-name="application">
-        <div class="canvas">
-            {{ render "network" }}
-            <button {{action "startSimulations" disabled}} {{bindAttr disabled="controller.shouldDisable"}}>Start Simulations</button>
+        <div class="simulatorcontainer">
+            <div class="row">
+                <div id="editor_container" class="six columns">
+                    {{ render "editor" }}
+                </div>
+                <div id="simulator" class="six columns">
+                    {{ render "network" }}
+                </div>
+            </div>
         </div>
+
+        <div class="statusbarcontainer">
+            <div class="row statusbar">
+                <div class="four columns">
+                    <a class="icon expandlayout" title="Change Layout" {{ action "changeLayout" }}></a>
+                </div>
+                <div class="four columns center">
+                    <a class="icon startsimulation" {{ action "startSimulations" disabled }}></a>
+                    <a class="icon disabled pausesimulation" {{ action "pauseSimulation" }}></a>
+                    <a class="icon disabled gonextstep" {{ action "goNextStep" }}></a>
+                    <a class="icon disabled stopsimulation" {{ action "stopSimulation" }}></a>
+                </div>
+                <div class="four columns template">
+                    <div class="row">
+                        <div class="six columns canvascontrols">
+                            <a class="icon addnode" {{ action "addNode" }}></a>
+                        </div>
+                        <div class="six columns">
+                        {{ view App.TemplateView
+                            contentBinding="App.TemplateModel.content"
+                            valueBinding="App.TemplateModel.value"
+                            disabledBinding="controller.currentlyRunning"
+                        }}
+                        </div
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mainbody">
+            <div class="two columns">
+                <h1>Morpheus</h1>
+            </div>
+        </div>
+
+        {{ outlet }}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="editor">
+        {{ controller }}
     </script>
 
     <script type="text/x-handlebars" data-template-name="network">
         {{ controller }}
     </script>
+
+    <script type="text/x-handlebars" data-template-name="template">
+        {{ controller }}
+    </script>
+
+
+
 
     <div id="dialog-form">
         <label for="NodeId">Enter a NodeId</label>
