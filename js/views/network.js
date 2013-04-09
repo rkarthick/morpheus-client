@@ -34,12 +34,13 @@ define([
 
         createMessageBubble: function (point, message) {
             // TODO: check edge proximity
+
             // create the text
             var text = new paper.PointText(point);
             text.content = message;
             text.characterStyle = {
                 fontSize: ENV.msg_fontsize,
-                fillColor: ENV.msg_fgcolor,
+                fillColor: ENV.msg_fgcolor
             };
             text.bounds.center = new paper.Point(
                 point.x,
@@ -63,7 +64,19 @@ define([
             roundedRectangle.fillColor = ENV.msg_bgcolor;
             text.moveAbove(roundedRectangle);
 
-            return new paper.Group([roundedRectangle, text]);
+            // create the line
+            var line = new paper.Path.Line(
+                roundedRectangle.position,
+                new paper.Point(
+                    roundedRectangle.position.x,
+                    roundedRectangle.position.y + ENV.node_radius + 15
+                )
+            );
+            line.strokeColor = 'white';
+            line.strokeWidth = 5;
+            line.moveBelow(roundedRectangle);
+
+            return new paper.Group([line, roundedRectangle, text]);
         },
 
         removeMessages: function () {
@@ -98,14 +111,14 @@ define([
             messageCircle.fillColor = ENV.message_color;
             messageCircle.opacity = 0.9;
 
-            source.y = source.y - ENV.node_radius - 20;
+            source.y = source.y - ENV.node_radius - 15;
             var messageBubble = this.createMessageBubble(
                 source,
                 message.get("contents")
             );
             var messageBubbleDestination = new paper.Point(
                 destination.x,
-                destination.y - ENV.node_radius - 20
+                destination.y - ENV.node_radius - 15
             );
             messageBubble.visible = this.get("controller").areMessagesVisible();
 

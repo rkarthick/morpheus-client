@@ -46,7 +46,7 @@ ENV = typeof ENV !== 'undefined' ? ENV : {
     layout_small: 0,
     layout_big: 1,
     msg_bgcolor: "#54924F",
-    msg_fgcolor: "#1a1a1a",
+    msg_fgcolor: "#f1f1f1",
     msg_fontsize: 18
 };
 
