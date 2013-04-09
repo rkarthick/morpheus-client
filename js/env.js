@@ -22,9 +22,9 @@ ENV = typeof ENV !== 'undefined' ? ENV : {
     node_fgcolor_dead: "#3d3d3d",
     node_bgcolor_active: "#D4B255",
     node_fgcolor_active: "#211F01",
-    node_font_size: 15,
+    node_font_size: 17,
     node_font: "Arial",
-    node_radius: 20,
+    node_radius: 22,
     edge_color: "#a1a1a1",
     edge_stroke_width: 5,
     edge_color_current: "white",
@@ -34,7 +34,7 @@ ENV = typeof ENV !== 'undefined' ? ENV : {
     message_color: "#63A7CC",
     shout_fgcolor: "white",
     shout_bgcolor: "black",
-    shout_font_size: 15,
+    shout_font_size: 12,
     shout_delay: 2000,
     SIMULMODE: 1,
     EDITMODE: 2,
@@ -44,7 +44,10 @@ ENV = typeof ENV !== 'undefined' ? ENV : {
     banner_fgcolor: "#00FF80",
     banner_font_size: 35,
     layout_small: 0,
-    layout_big: 1
+    layout_big: 1,
+    msg_bgcolor: "#54924F",
+    msg_fgcolor: "#1a1a1a",
+    msg_fontsize: 18
 };
 
 ENV.layout[0] = {};

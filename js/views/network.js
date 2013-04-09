@@ -31,6 +31,62 @@ define([
             return paper.project.hitTest(event.point, ENV.hitOptions);
         },
 
+
+        createMessageBubble: function (point, message) {
+            // TODO: check edge proximity
+            // create the text
+            var text = new paper.PointText(point);
+            text.content = message;
+            text.characterStyle = {
+                fontSize: ENV.msg_fontsize,
+                fillColor: ENV.msg_fgcolor,
+            };
+            text.bounds.center = new paper.Point(
+                point.x,
+                point.y - (ENV.shout_font_size / 4)
+            );
+
+            // create the bounding rectangle
+            var br = new paper.Point({
+                x: (text.bounds.bottomRight.x + 8),
+                y: (text.bounds.bottomRight.y + 10)
+            });
+            var tl = new paper.Point({
+                x: (text.bounds.topLeft.x - 8),
+                y: (text.bounds.topLeft.y - 5)
+            });
+            var rectangle = new paper.Rectangle(tl, br);
+            var roundedRectangle = new paper.Path.RoundRectangle(
+                rectangle,
+                new paper.Size(10, 10)
+            );
+            roundedRectangle.fillColor = ENV.msg_bgcolor;
+            text.moveAbove(roundedRectangle);
+
+            return new paper.Group([roundedRectangle, text]);
+        },
+
+        removeMessages: function () {
+            var key;
+            for (key in this.nodes) {
+                if (this.nodes.hasOwnProperty(key)) {
+                    var node = this.nodes[key];
+                    node.removeMessage();
+                }
+            }
+        },
+
+        setMessagesVisibility: function (isVisible) {
+            var key;
+            for (key in this.nodes) {
+                if (this.nodes.hasOwnProperty(key)) {
+                    var node = this.nodes[key];
+                    node.setMessageVisibility(isVisible);
+                }
+            }
+            paper.view.draw();
+        },
+
         deliverMessage: function (fromNodeId, toNodeId, message) {
             var fromNode = this.nodes[fromNodeId];
             var toNode = this.nodes[toNodeId];
@@ -42,6 +98,17 @@ define([
             messageCircle.fillColor = ENV.message_color;
             messageCircle.opacity = 0.9;
 
+            source.y = source.y - ENV.node_radius - 20;
+            var messageBubble = this.createMessageBubble(
+                source,
+                message.get("contents")
+            );
+            var messageBubbleDestination = new paper.Point(
+                destination.x,
+                destination.y - ENV.node_radius - 20
+            );
+            messageBubble.visible = this.get("controller").areMessagesVisible();
+
             fromNode.moveAbove(messageCircle);
             toNode.moveAbove(messageCircle);
 
@@ -50,12 +117,26 @@ define([
             });
 
             var update = true;
+            var networkObj = this;
             paper.view.onFrame = function (event) {
                 if (update === true) {
                     var vector = destination.subtract(messageCircle.position);
+                    // move it closer by 20 points
                     messageCircle.position = messageCircle.position.add(
                         vector.divide(20)
                     );
+
+                    if (messageBubble !== null) {
+                        var msgVector = messageBubbleDestination.subtract(
+                            messageBubble.position
+                        );
+                        messageBubble.position = messageBubble.position.add(
+                            msgVector.divide(20)
+                        );
+                    }
+                    messageBubble.visible = networkObj.get("controller").areMessagesVisible();
+
+                    // if the message has reached the destination
                     if (Math.abs(vector.x) <= (ENV.node_radius / 2) &&
                              Math.abs(vector.y) <= (ENV.node_radius / 2)) {
                         update = false;
@@ -70,8 +151,14 @@ define([
                     setTimeout(waitForUpdate, 50);
                     return;
                 } else {
+                    var messageBubbleForNode = null;
+                    if (messageBubble !== null) {
+                        // clone messagebubble before removing
+                        messageBubbleForNode = messageBubble.clone();
+                        messageBubble.remove();
+                    }
                     messageCircle.remove();
-                    toNode.messageCreated(message);
+                    toNode.messageCreated(message, messageBubbleForNode);
                 }
             };
             waitForUpdate();
@@ -134,16 +221,18 @@ define([
             });
 
             for (key in this.nodes) {
-                var node = this.nodes[key];
-                if ((node.getCenter().x === points[0].x &&
-                        node.getCenter().y === points[0].y) ||
-                        (node.getCenter().x === points[1].x &&
-                        node.getCenter().y === points[1].y)) {
-                    edgeNodes[j] = parseInt(key, 10);
-                    j = j + 1;
+                if (this.nodes.hasOwnProperty(key)) {
+                    var node = this.nodes[key];
+                    if ((node.getCenter().x === points[0].x &&
+                            node.getCenter().y === points[0].y) ||
+                            (node.getCenter().x === points[1].x &&
+                            node.getCenter().y === points[1].y)) {
+                        edgeNodes[j] = parseInt(key, 10);
+                        j = j + 1;
+                    }
+                    // remove edge from node view
+                    node.removeEdge(selectedItem);
                 }
-                // remove edge from node view
-                node.removeEdge(selectedItem);
             }
 
 
@@ -417,8 +506,13 @@ define([
         },
 
         updateBannerText: function (content) {
+            if (this.bannerContainer === null) {
+                return;
+            }
             if (this.bannerText === null) {
-                this.bannerText = new paper.PointText(this.bannerContainer.bounds.center);
+                this.bannerText = new paper.PointText(
+                    this.bannerContainer.bounds.center
+                );
                 this.bannerText.moveAbove(this.bannerContainer);
             }
             this.bannerText.content = content;
@@ -440,25 +534,25 @@ define([
 
         changeElementsLocation: function () {
             var i,
-                key;
-
-            var sign = -1;
+                key,
+                sign;
+            sign = -1;
 
             if (this.width === ENV.canvas_width_big) {
                 sign = 1;
             }
 
             for (key in this.nodes) {
-                var node = this.nodes[key];
+                if (this.nodes.hasOwnProperty(key)) {
+                    var node = this.nodes[key];
+                    var x = node.getCenter().x;
+                    var y = node.getCenter().y;
 
-                var x = node.getCenter().x;
-                var y = node.getCenter().y;
-                console.log(x + ", " + y);
+                    x = x + (sign * (ENV.canvas_width_big - ENV.canvas_width_small) / 2);
+                    y = y + (sign * (ENV.canvas_height_big - ENV.canvas_height_small) / 2);
 
-                x = x + (sign * (ENV.canvas_width_big - ENV.canvas_width_small) / 2);
-                y = y + (sign * (ENV.canvas_height_big - ENV.canvas_height_small) / 2);
-
-                node.moveTo(new paper.Point(x, y));
+                    node.moveTo(new paper.Point(x, y));
+                }
             }
             paper.view.draw();
 

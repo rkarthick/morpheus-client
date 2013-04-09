@@ -60,6 +60,18 @@ define([
             this.executionFinished();
         },
 
+        hideMessages: function () {
+            if (this.controllerFor("network").areMessagesVisible() === true) {
+                this.controllerFor("network").setMessagesVisible(false);
+                $(".hidemessages").addClass("showmessages");
+                $(".showmessages").removeClass("hidemessages");
+            } else {
+                this.controllerFor("network").setMessagesVisible(true);
+                $(".showmessages").addClass("hidemessages");
+                $(".hidemessages").removeClass("showmessages");
+            }
+        },
+
         executionFinished: function () {
             this.set("currentlyRunning", false);
             $(".addnode").removeClass("disabled");
@@ -68,6 +80,7 @@ define([
             $(".pausesimulation").addClass("disabled");
             $(".gonextstep").addClass("disabled");
             $(".stopsimulation").addClass("disabled");
+            $(".hidemessages").addClass("disabled");
         },
 
         pauseSimulation: function () {
@@ -112,6 +125,7 @@ define([
             $(".pausesimulation").removeClass("disabled");
             $(".gonextstep").addClass("disabled");
             $(".stopsimulation").removeClass("disabled");
+            $(".hidemessages").removeClass("disabled");
         },
 
         changeLayout: function () {

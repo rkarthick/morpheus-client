@@ -11,6 +11,7 @@ define([
         uiObject: null,
         ed: [],
         messagesCount: 0,
+        messageBubble: null,
 
         nodeIdBinding: 'controller.nodeId',
         x: (ENV.canvas_width - ENV.node_radius) / 2,
@@ -35,7 +36,18 @@ define([
             );
         },
 
-        messageCreated: function (message) {
+        removeMessage: function () {
+            if (this.messageBubble !== null) {
+                this.messageBubble.remove();
+            }
+        },
+
+        setMessageVisibility: function (isVisible) {
+            this.messageBubble.visible = isVisible;
+        },
+
+        messageCreated: function (message, messageBubble) {
+            this.messageBubble = messageBubble;
             var aniCircle = new paper.Path.Circle(
                 this.getCenter(),
                 ENV.node_radius

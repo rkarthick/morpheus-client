@@ -17,6 +17,16 @@ define([
         templateObject: null,
         pauseSimulationFlag: false,
         killSimulationFlag: false,
+        showMessagesFlag: true,
+
+        areMessagesVisible: function () {
+            return this.showMessagesFlag;
+        },
+
+        setMessagesVisible: function (isVisible) {
+            this.showMessagesFlag = isVisible;
+            this.get("view").setMessagesVisibility(isVisible);
+        },
 
         clear: function () {
             var key = 0;
@@ -44,11 +54,12 @@ define([
         resumeSimulation: function () {
             if (this.pauseSimulationFlag === true) {
                 this.set("pauseSimulationFlag", false);
-                this.executor.signalStartNewRound();
+                this.goToNextRound();
             }
         },
 
         goToNextRound: function () {
+            this.get("view").removeMessages();
             this.executor.signalStartNewRound();
         },
 
@@ -97,6 +108,7 @@ define([
         },
 
         cleanUpRounds: function () {
+            this.get("view").removeMessages();
             this.setNodesColor(ENV.node_bgcolor, ENV.node_fgcolor);
             this.get("view").changeMode(ENV.EDITMODE);
             this.get("view").removeBanner();
@@ -129,7 +141,7 @@ define([
                         return;
                     }
                     if (networkObj.pauseSimulationFlag === false) {
-                        networkObj.executor.signalStartNewRound();
+                        networkObj.goToNextRound();
                     }
                     networkObj.get("view").updateBannerText(roundNumber + 1);
                 }

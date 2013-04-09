@@ -300,7 +300,7 @@ define([
                 script = script + header;
                 script = script + algorithm;
                 script = script + "\n} catch(err) { signalError (err); } }; } ()); \n";
-                console.log(script);
+
                 return script;
             },
 
