@@ -43,7 +43,6 @@ define([
             }
             networkController.connectNodes(lastNode.nodeId, firstNode.nodeId);
             next[lastNode.nodeId] = firstNode.nodeId;
-            console.log(next);
             paper.view.draw();
 
             return next;

@@ -21,6 +21,10 @@ a {
 
 /* starting foundation inspirted script */
 
+.hidden {
+  display: none;
+}
+
 .statusbarcontainer {
     width: 100%;
     background-color: #1a1a1a;
@@ -43,10 +47,13 @@ a {
   text-align: center;
 }
 
-.row .row .canvascontrols {
+.row .row .right {
     text-align: right !important;
 }
 
+.row .row .left {
+  text-align: left !important;
+}
 
 .column, .columns {
     padding: 0px !important;

@@ -1,0 +1,33 @@
+var n = getNeighbours();
+var right = getTemplateHelper();
+
+var status = "unknown";
+var msg = getId();
+
+while (1) {
+    if (msg !== null) {
+        send(right, msg);
+        if (msg === "END") {
+            exit;
+        }
+    }
+
+    msg = null;
+
+    if (messagesToReceive()) {
+        data = receive();
+        d = data.message;
+        if (d === "END") {
+            shout("Recieved END");
+            msg = "END";
+        } else if (parseInt(d) === getId()) {
+            msg = "END";
+            status = "leader";
+            shout("I am the leader");
+        } else if (parseInt(d) > getId()) {
+            msg = d;
+            shout("Not leader!");
+            status = "not leader";
+        }
+    }
+}

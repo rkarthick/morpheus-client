@@ -30,26 +30,37 @@
         <div class="statusbarcontainer">
             <div class="row statusbar">
                 <div class="four columns">
-                    <a class="icon expandlayout" title="Change Layout" {{ action "changeLayout" }}></a>
+                    <div class="row">
+                    <div class="two columns">
+                        <a title="Change Layout" class="icon expandlayout" title="Change Layout" {{ action "changeLayout" }}></a>
+                    </div>
+                    <div class="ten columns left">
+                        {{ view App.AlgorithmView
+                            contentBinding="App.AlgorithmModel.content"
+                            valueBinding="App.AlgorithmModel.value"
+                            disabledBinding="controller.currentlyRunning"
+                        }}
+                    </div>
+                    </div>
                 </div>
                 <div class="four columns center">
-                    <a class="icon startsimulation" {{ action "startSimulations" disabled }}></a>
-                    <a class="icon disabled pausesimulation" {{ action "pauseSimulation" }}></a>
-                    <a class="icon disabled gonextstep" {{ action "goNextStep" }}></a>
-                    <a class="icon disabled stopsimulation" {{ action "stopSimulation" }}></a>
+                    <a title="Start Simulations" class="icon startsimulation" {{ action "startSimulations" disabled }}></a>
+                    <a title="Pause Simulations" class="icon disabled pausesimulation" {{ action "pauseSimulation" }}></a>
+                    <a title="Goto next round" class="icon disabled gonextstep" {{ action "goNextStep" }}></a>
+                    <a title="Stop Simulation" class="icon disabled stopsimulation" {{ action "stopSimulation" }}></a>
                 </div>
                 <div class="four columns template">
                     <div class="row">
-                        <div class="six columns canvascontrols">
-                            <a class="icon addnode" {{ action "addNode" }}></a>
+                        <div class="ten columns right">
+                            {{ view App.TemplateView
+                                contentBinding="App.TemplateModel.content"
+                                valueBinding="App.TemplateModel.value"
+                                disabledBinding="controller.currentlyRunning"
+                            }}
                         </div>
-                        <div class="six columns">
-                        {{ view App.TemplateView
-                            contentBinding="App.TemplateModel.content"
-                            valueBinding="App.TemplateModel.value"
-                            disabledBinding="controller.currentlyRunning"
-                        }}
-                        </div
+                        <div class="two columns left">
+                            <a title="Add Node" class="icon addnode" {{ action "addNode" }}></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,6 +93,8 @@
     <div id="dialog-form">
         <label for="NodeId">Enter a NodeId</label>
         <input type="text" name="NodeId" id="nodeId" class="text ui-widget-content ui-corner-all"/>
+    </div>
+    <div id="error_dialog" title="Error in script execution">
     </div>
 
     <script data-main="js/load" src="js/require.js"></script>

@@ -5,13 +5,16 @@ define([
     'controllers/node',
     'controllers/template',
     'controllers/editor',
+    'controllers/algorithm',
     'views/network',
     'views/node',
     'views/editor',
     'views/template',
+    'views/algorithm',
     'models',
-    'templatemodel'
-], function (lib, networkController, nodeController, templateController, editorController, networkView, nodeView, editorView, templateView, models, templateModel) {
+    'templatemodel',
+    'algorithmmodel'
+], function (lib, networkController, nodeController, templateController, editorController, algorithmController, networkView, nodeView, editorView, templateView, algorithmView, models, templateModel, algorithmModel) {
     'use strict';
 
     var Ember = lib.Ember;
@@ -43,8 +46,13 @@ define([
             this.controllerFor('template').render(templateName);
         },
 
+        readAlg: function (algorithmName) {
+            this.controllerFor('algorithm').render(algorithmName);
+        },
+
         stopSimulation: function () {
             if (this.currentlyRunning === false) {
+                this.controllerFor("network").cleanUpRounds();
                 return;
             }
             this.controllerFor("network").cancelSimulation();
@@ -121,6 +129,10 @@ define([
             this.controllerFor("editor").changeLayout(this.currentLayout);
         },
 
+        loadAlgorithm: function (algorithm) {
+            this.controllerFor("editor").setAlgorithm(algorithm);
+        },
+
         addNode: function () {
             if (this.currentlyRunning === true) {
                 return;
@@ -156,6 +168,11 @@ define([
     App.TemplateController = templateController;
 
     App.TemplateModel = templateModel;
+
+    App.AlgorithmView = algorithmView;
+    App.AlgorithmController = algorithmController;
+
+    App.AlgorithmModel = algorithmModel;
 
     // Debug
     var algorithm;

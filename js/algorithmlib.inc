@@ -129,10 +129,16 @@ var message = function (msg) {
     this.data = msg;
 };
 
-/*
-var log = function(msg) {
-    console.log(msg);
-};*/
+var signalError = function (err) {
+    var message = {};
+    message.cmd = "close_error";
+    message.err = JSON.stringify(err);
+    message.messages = outMessageQ;
+
+    self.postMessage(JSON.stringify(message));
+    self.close();
+}
+
 
 var closeThread = function() {
 
@@ -145,3 +151,4 @@ var closeThread = function() {
 };
 
 var codeBlock = function () {
+    try {

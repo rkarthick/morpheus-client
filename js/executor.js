@@ -257,6 +257,10 @@ define([
                     closeWorkerThread(event.srcElement);
                 }
 
+                if (message.cmd === "close_error") {
+                    this.cancelExecution();
+                }
+
                 checkAndStartNewRound();
             },
 
@@ -295,7 +299,8 @@ define([
                 var script = "(function(){ \n";
                 script = script + header;
                 script = script + algorithm;
-                script = script + "\n}; } ()); \n";
+                script = script + "\n} catch(err) { signalError (err); } }; } ()); \n";
+                console.log(script);
                 return script;
             },
 
@@ -308,9 +313,20 @@ define([
                 return getAlgoLib();
             },
 
+            onError = function (e) {
+                console.log(e);
+                e.cancelBubble = true;
+                e.stopPropagation();
+                e.preventDefault();
+
+                stopAllWorkers();
+                currentNetworkController.executorFailed(e.message);
+            },
+
             createWorker = function (blob) {
                 var worker = new Worker(window.URL.createObjectURL(blob));
                 worker.onmessage = messageHandler;
+                worker.addEventListener('error', onError, false);
                 return worker;
             },
 

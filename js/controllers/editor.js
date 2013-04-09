@@ -12,6 +12,10 @@ define([
             return this.get("view").getAlgorithm();
         },
 
+        setAlgorithm: function (algorithm) {
+            return this.get("view").setAlgorithm(algorithm);
+        },
+
         setView: function (view) {
             this.view = view;
         },

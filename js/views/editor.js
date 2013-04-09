@@ -13,6 +13,10 @@ define([
         width: ENV.canvas_width,
         aceObject: null,
 
+        setAlgorithm: function (algorithm) {
+            this.aceObject.setValue(algorithm);
+        },
+
         getAlgorithm: function () {
             return this.aceObject.getValue();
         },

@@ -33,6 +33,11 @@ define([
         }
     });
 
+    $("#error_dialog").dialog({
+        autoOpen: false,
+        modal: true
+    });
+
     $("#nodeId").numeric({negative: false});
 
 });

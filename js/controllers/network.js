@@ -76,6 +76,12 @@ define([
             }
         },
 
+        executorFailed: function (message) {
+            this.cleanUpRounds();
+            $("#error_dialog").html(message);
+            $("#error_dialog").dialog("open");
+        },
+
         setNodeColor: function (bgColor, fgColor, nodeId) {
             this.nodes[nodeId].get("view").setColor(bgColor, fgColor);
         },

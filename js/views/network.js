@@ -260,9 +260,9 @@ define([
                 return;
             }
 
-            if (key.toUpperCase() === "C") {
-                obj.createNewNode();
-            }
+            // if (key.toUpperCase() === "C") {
+            //     obj.createNewNode();
+            // }
             if (key === ENV.DELETE || key === "backspace") {
                 obj.deleteSelectedItem();
             }
