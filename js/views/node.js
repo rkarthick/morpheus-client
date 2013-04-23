@@ -37,16 +37,23 @@ define([
         },
 
         removeMessage: function () {
-            if (this.messageBubble !== null) {
-                this.messageBubble.remove();
+            if (this.messageBubble === null) {
+                return;
             }
+            this.messageBubble.remove();
         },
 
         setMessageVisibility: function (isVisible) {
+            if (this.messageBubble === null) {
+                return;
+            }
             this.messageBubble.visible = isVisible;
         },
 
         messageCreated: function (message, messageBubble) {
+            if (this.messageBubble !== null) {
+                this.removeMessage();
+            }
             this.messageBubble = messageBubble;
             var aniCircle = new paper.Path.Circle(
                 this.getCenter(),
@@ -174,7 +181,6 @@ define([
         shout: function (message) {
             var point = this.getCenter();
             point.y = point.y + ENV.node_radius + 30;
-            point.x = point.x;
 
             // TODO: check edge proximity
             // create the text

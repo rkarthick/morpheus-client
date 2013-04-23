@@ -5,6 +5,6 @@ define([
 
     return lib.Ember.Object.create({
         value: "Custom",
-        content: ["Custom", "LeaderRing"]
+        content: ["Custom", "LeaderRing", "LeaderLine"]
     });
 });

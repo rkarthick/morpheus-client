@@ -81,6 +81,7 @@ define([
             $(".gonextstep").addClass("disabled");
             $(".stopsimulation").addClass("disabled");
             $(".hidemessages").addClass("disabled");
+            $(".showmessages").addClass("disabled");
         },
 
         pauseSimulation: function () {

@@ -10,6 +10,10 @@ define([
             var radius = 230,
                 next = {};
 
+            if (isNaN(parseInt(numNodes, 10))) {
+                return;
+            }
+
             var point = new paper.Point({
                 x: (ENV.canvas_width / 2),
                 y: (ENV.canvas_height / 2)

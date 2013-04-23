@@ -12,6 +12,10 @@ define([
                 bt = {};
 
             numLevels = parseInt(numLevels, 10);
+            if (isNaN(numLevels)) {
+                return;
+            }
+
             if (ENV.canvas_width === ENV.canvas_width_big) {
                 interval = 550;
             }

@@ -5,6 +5,6 @@ define([
 
     return lib.Ember.Object.create({
         value: "Custom",
-        content: ["Custom", "Ring", "BinaryTree"]
+        content: ["Custom", "Ring", "BinaryTree", "Line"]
     });
 });

@@ -158,6 +158,7 @@ define([
                 ENV.node_bgcolor_dead,
                 ENV.node_fgcolor_dead
             );
+            this.nodes[nodeId].get("view").removeMessage();
         },
 
         getAngleWrtXAxis: function (v1) {

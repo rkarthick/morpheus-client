@@ -32,7 +32,7 @@ a {
 
 .mainbody {
     background-color: white;
-    height: 1000px;
+    /*minheight: 1000px;*/
     padding: 10px;
 }
 

@@ -1,7 +1,8 @@
 define([
     'libs/load',
     'templates/binarytree',
-    'templates/ring'
+    'templates/ring',
+    'templates/line'
 ], function (lib) {
     "use strict";
 
