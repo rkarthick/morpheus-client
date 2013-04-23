@@ -220,7 +220,12 @@ define([
                 if (receivedMessages === startWorkerCount) {
                     roundsCount = roundsCount + 1;
                     receivedMessages = 0;
-                    transferMessages();
+                    try {
+                        transferMessages();
+                    } catch (err) {
+                        stopAllWorkers();
+                        currentNetworkController.executorFailed("Error. Invalid message sent to neighbor");
+                    }
 
                     currentNetworkController.waitForView(roundsCount);
                 }
@@ -230,9 +235,11 @@ define([
             // closeWorkerThread()
             closeWorkerThread = function (worker) {
                 var i;
+
                 // terminate worker
                 worker.terminate();
 
+                // remove worker from the local datastructure
                 for (i = 0; i < workers.length; i = i + 1) {
                     if (workers[i].worker === worker) {
                         break;
@@ -244,17 +251,23 @@ define([
                 );
 
                 workers.remove(i);
+
                 // check if the workers arry is empty
                 checkIfAllWorkerAreDead();
+            },
+
+            closeHandler = function (event) {
+                alert(event);
+                closeWorkerThread();
             },
 
             // messageHandler from workers
             messageHandler = function (event) {
                 var message = JSON.parse(event.data);
 
-                loadMessageQ(event.srcElement, message.messages);
+                loadMessageQ(event.target, message.messages);
                 if (message.cmd === "close") {
-                    closeWorkerThread(event.srcElement);
+                    closeWorkerThread(event.target);
                 }
 
                 if (message.cmd === "close_error") {
@@ -291,7 +304,7 @@ define([
 
                 // find exit and replace it will close.closeThread
                 re = /\s*exit;\s*/g;
-                replaceStr = "\n closeThread(); \n";
+                replaceStr = "\n closeThread(); \n return; \n";
                 algorithm = algorithm.replace(re, replaceStr, "g");
 
                 // decorate it with anonymizers for safety
@@ -326,6 +339,7 @@ define([
             createWorker = function (blob) {
                 var worker = new Worker(window.URL.createObjectURL(blob));
                 worker.onmessage = messageHandler;
+                worker.onclose = closeHandler;
                 worker.addEventListener('error', onError, false);
                 return worker;
             },

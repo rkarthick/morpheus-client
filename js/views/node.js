@@ -59,7 +59,7 @@ define([
                 this.getCenter(),
                 ENV.node_radius
             );
-
+            // animation circle that shows that the message is recieved
             aniCircle.fillColor = "white";
             var currentOpacity = 1.0;
             aniCircle.opacity = currentOpacity;

@@ -124,6 +124,8 @@ define([
 
             fromNode.moveAbove(messageCircle);
             toNode.moveAbove(messageCircle);
+            fromNode.moveAbove(messageBubble);
+            toNode.moveAbove(messageBubble);
 
             fromNode.getEdges().forEach(function (edge) {
                 messageCircle.moveAbove(edge);
@@ -540,6 +542,9 @@ define([
         },
 
         removeBanner: function () {
+            if (this.bannerContainer === null) {
+                return;
+            }
             this.bannerContainer.remove();
             this.bannerText.remove();
             this.bannerContainer = this.bannerText = null;

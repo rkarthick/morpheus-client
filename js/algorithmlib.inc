@@ -136,7 +136,7 @@ var signalError = function (err) {
     message.messages = outMessageQ;
 
     self.postMessage(JSON.stringify(message));
-    self.close();
+    // self.close();
 }
 
 
@@ -147,7 +147,7 @@ var closeThread = function() {
     message.messages = outMessageQ;
 
     self.postMessage(JSON.stringify(message));
-    self.close();
+    // self.close();
 };
 
 var codeBlock = function () {
