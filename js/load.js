@@ -8,7 +8,7 @@ requirejs.config({
 });
 
 define([
-    'core'
+    'core',
 ], function (app) {
     'use strict';
     window.App = app;

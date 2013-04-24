@@ -336,8 +336,18 @@ define([
                 currentNetworkController.executorFailed(e.message);
             },
 
+            createObjectURL = function (file) {
+                if (window.webkitURL) {
+                    return window.webkitURL.createObjectURL(file);
+                } else if (window.URL && window.URL.createObjectURL) {
+                    return window.URL.createObjectURL(file);
+                } else {
+                    return null;
+                }
+            },
+
             createWorker = function (blob) {
-                var worker = new Worker(window.URL.createObjectURL(blob));
+                var worker = new Worker(createObjectURL(blob));
                 worker.onmessage = messageHandler;
                 worker.onclose = closeHandler;
                 worker.addEventListener('error', onError, false);

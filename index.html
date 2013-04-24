@@ -13,6 +13,14 @@
         <link rel="stylesheet" href="css/jquery-ui.css">
         <link rel="stylesheet" href="css/foundation.css">
         <link rel="stylesheet" href="css/main.css">
+        <script type="text/javascript" src="js/libs/modernizr.js"></script>
+        <script>
+            // test capability
+            if (! (Modernizr.webworkers && Modernizr.canvas && Modernizr.postmessage && Modernizr.canvastext)) {
+                alert("Unfortunately the current version of Morepheus runs only in modern browsers that support webworkers and canvas. Kindly use latest versions of Chrome, Safari or Firefox to use Morpheus.");
+                this.location.href = "http://www.google.com/chrome";
+            }
+        </script>
     </head>
     <body>
     <script type="text/x-handlebars" data-template-name="application">
