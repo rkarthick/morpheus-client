@@ -5,8 +5,10 @@ define([
     "use strict";
 
     return {
-        render: function () {
-            var numNodes = prompt("Enter the number of nodes for the ring");
+        render: function (numNodes) {
+            if (numNodes === undefined) {
+                numNodes = prompt("Enter the number of nodes for the ring");
+            }
             var radius = 230,
                 next = {};
 

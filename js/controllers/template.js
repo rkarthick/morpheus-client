@@ -12,7 +12,7 @@ define([
             this.view = view;
         },
 
-        render: function (templateName) {
+        render: function (templateName, numNodes) {
             this.controllerFor('network').clear();
 
             templateName = templateName.toLowerCase();
@@ -21,7 +21,7 @@ define([
             }
 
             var renderer = require("templates/" + templateName);
-            this.controllerFor('network').set("templateObject", renderer.render());
+            this.controllerFor('network').set("templateObject", renderer.render(numNodes));
         }
     });
 });

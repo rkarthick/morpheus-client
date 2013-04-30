@@ -5,8 +5,10 @@ define([
     "use strict";
 
     return {
-        render: function () {
-            var numNodes = prompt("Enter the number of nodes for the line");
+        render: function (numNodes) {
+            if (numNodes === undefined) {
+                numNodes = prompt("Enter the number of nodes for the line");
+            }
             var interval = 100;
 
             if (isNaN(parseInt(numNodes, 10))) {

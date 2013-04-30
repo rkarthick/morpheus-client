@@ -180,12 +180,12 @@ define([
         },
 
         loadRing: function () {
-            this.controllerFor('template').render("ring");
+            this.controllerFor('template').render("ring", 8);
             this.controllerFor('algorithm').render("leaderring");
         },
 
         loadLine: function () {
-            this.controllerFor('template').render("line");
+            this.controllerFor('template').render("line", 5);
             this.controllerFor('algorithm').render("leaderline");
         }
     });
