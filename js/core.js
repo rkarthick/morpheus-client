@@ -1,4 +1,4 @@
-
+/** Core Ember file **/
 define([
     'libs/load',
     'controllers/network',
@@ -31,6 +31,8 @@ define([
     });
 
     App.rootcontroller = null;
+
+    // setup application controller for handling events in the page
     App.ApplicationController = Ember.Controller.extend({
         currentlyRunning: false,
         currentLayout: ENV.layout_small,
@@ -187,6 +189,7 @@ define([
         adapter: 'DS.FixtureAdapter'
     });
 
+    // setup the views, controller and model for network, nodes, templates and algorithms
     App.NetworkView = networkView;
     App.NetworkController = networkController;
     App.Network = models.Network;
@@ -211,24 +214,5 @@ define([
 
     App.AlgorithmModel = algorithmModel;
 
-    // Debug
-    var algorithm;
-    App.ReadAlgorithm = function () {
-        // make a synchronous jquery call to fetch algorithmlib.js
-        var jqxhr = $.ajax({
-            url: "js/algorithm",
-            success: function (data) {
-                algorithm = data;
-            },
-            async: false
-        });
-        return algorithm;
-    };
-
     return App;
 });
-
-
-// Ember.Select
-//     contentBinding="App.NodeTemplates.content"
-//     valueBinding="App.NodeTemplates.value"
