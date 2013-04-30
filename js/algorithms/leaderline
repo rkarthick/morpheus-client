@@ -1,0 +1,56 @@
+var n = getNeighbours();
+var id = getId();
+var isLeaf = false,
+    msg = null,
+    target = null,
+    leader_id = null,
+    t = null;
+
+if (n.length === 1) {
+    isLeaf = true;
+    msg = -1;
+    target = n[0];
+}
+
+while (1) {
+    if (msg !== null && target !== null) {
+        send(target, msg);
+        setColor("skyblue", "black")
+        if (msg === id) {
+            send(n[1], msg);
+        }
+    }
+
+    if (leader_id !== null) {
+        shout(leader_id);
+        exit;
+    }
+
+    msg = null;
+
+    if (messagesToReceive()) {
+        data = receive();
+        d = data.message;
+        from = data.fromNode;
+
+        if (target !== null) {
+            leader_id = d;
+        }
+
+        if (isLeaf === false) {
+            if (n[0] === from) {
+                target = n[1];
+            } else {
+                target = n[0];
+            }
+            msg = d;
+            if (messagesToReceive()) {
+                leader_id = id;
+                msg = id;
+                target = n[0];
+            }
+        } else {
+            target = null;
+        }
+    }
+}

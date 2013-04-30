@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Morpheus</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" href="css/foundation.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script type="text/javascript" src="js/libs/modernizr.js"></script>
+        <script>
+            // test capability
+            if (! (Modernizr.webworkers && Modernizr.canvas && Modernizr.postmessage && Modernizr.canvastext)) {
+                alert("Unfortunately the current version of Morepheus runs only in modern browsers that support webworkers and canvas. Kindly use latest versions of Chrome, Safari or Firefox to use Morpheus.");
+                this.location.href = "http://www.google.com/chrome";
+            }
+        </script>
+    </head>
+    <body>
+    <script type="text/x-handlebars" data-template-name="application">
+        <div class="simulatorcontainer">
+            <div class="row">
+                <div id="editor_container" class="six columns">
+                    {{ render "editor" }}
+                </div>
+                <div id="simulator" class="six columns">
+                    {{ render "network" }}
+                </div>
+            </div>
+        </div>
+
+        <div class="statusbarcontainer">
+            <div class="row statusbar">
+                <div class="four columns">
+                    <div class="row">
+                    <div class="two columns">
+                        <a title="Change Layout" class="icon expandlayout" title="Change Layout" {{ action "changeLayout" }}></a>
+                    </div>
+                    <div class="ten columns left">
+                        {{ view App.AlgorithmView
+                            contentBinding="App.AlgorithmModel.content"
+                            valueBinding="App.AlgorithmModel.value"
+                            disabledBinding="controller.currentlyRunning"
+                        }}
+                    </div>
+                    </div>
+                </div>
+                <div class="four columns center">
+                    <a title="Start Simulations" class="icon startsimulation" {{ action "startSimulations" disabled }}></a>
+                    <a title="Pause Simulations" class="icon disabled pausesimulation" {{ action "pauseSimulation" }}></a>
+                    <a title="Goto next round" class="icon disabled gonextstep" {{ action "goNextStep" }}></a>
+                    <a title="Stop Simulation" class="icon disabled stopsimulation" {{ action "stopSimulation" }}></a>
+                    <a title="Hide Messages" class="icon disabled hidemessages" {{ action "hideMessages" }}></a>
+                    <a title="Zoom Out" class="icon enabled zoomout" {{ action "changeZoom" }}></a>
+                </div>
+                <div class="four columns template">
+                    <div class="row">
+                        <div class="ten columns right">
+                            {{ view App.TemplateView
+                                contentBinding="App.TemplateModel.content"
+                                valueBinding="App.TemplateModel.value"
+                                disabledBinding="controller.currentlyRunning"
+                            }}
+                        </div>
+                        <div class="two columns left">
+                            <a title="Add Node" class="icon addnode" {{ action "addNode" }}></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mainbody">
+            <div class="two columns">
+                <h1>Morpheus</h1>
+            </div>
+        </div>
+
+        {{ outlet }}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="editor">
+        {{ controller }}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="network">
+        {{ controller }}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="template">
+        {{ controller }}
+    </script>
+
+
+
+
+    <div id="dialog-form">
+        <label for="NodeId">Enter a NodeId</label>
+        <input type="text" name="NodeId" id="nodeId" class="text ui-widget-content ui-corner-all"/>
+    </div>
+    <div id="error_dialog" title="Error in script execution">
+    </div>
+
+    <script data-main="js/load" src="js/require.js"></script>
+    </body>
+</html>
+
