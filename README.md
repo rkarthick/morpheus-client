@@ -5,8 +5,8 @@ Demo: http://www.csd.uwo.ca/~kramach/morpheus
 
 In a synchronous distributed system, an algorithm is executed in all the processors simultaneously. The understanding  and the analysis of the algorithm execution in a distributed environment can be quite challenging. Morpheus is an interactive visual algorithm simulation system for a distributed synchronous network, that can be used as a tool for algorithm visualization and simulation. The effectiveness of any learning tool is dependent on the amount of user engagement. Morpheus increases user engagement by providing the user flexibility to create and run their own algorithms in a custom network configuration specified by the user. 
 
-Implementation Details
-----------------------
+Implementation
+--------------
 
 Morpheus is implemented  in Javascript using HTML5. The canvas is developed using HTML5 canvas and the the thread creation in executor module uses WebWorkers functionality. WebWorker and HTML5 canvas are very recently (in 2012) introduced in the W3C specification. Hence only latest versions browsers, Firefox (>= 3.5), Chrome (>= 4.0), Safari (>= 4.0) and IE (>= 10) support Webworkers.
 
@@ -20,8 +20,8 @@ Morpheus also uses a variety of javascript libraries to aid the Rapid Applicatio
 6. Modernizr.js: Lets the developer to test if the browser has canvas and webworker functionality.
 
 
-File Structure
---------------
+Files
+-----
 
 High level description of each filesdeveloped for the project.
 
@@ -44,4 +44,14 @@ High level description of each filesdeveloped for the project.
     * templates/line.js: Algorithm to create line network on the canvas
     * views/[algorithm.js, editor.js, network.js, node.js, template.js]: contains the view related functions for respective modules
 
+License
+-------
+MIT Licensing
 
+Copyright (c) 2013 Karthick Ramachandran
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
