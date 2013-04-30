@@ -58,7 +58,6 @@ define([
             constructBT((ENV.canvas_width / 2), 50, 0);
 
             paper.view.draw();
-            console.log(bt);
             return bt;
         }
     };

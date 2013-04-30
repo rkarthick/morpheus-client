@@ -87,40 +87,49 @@ a {
 }
 
 .showmessages {
-    background-position: 0 0;
+    background-position: -192px 0;
 }
 
 .hidemessages {
-    background-position: -64px 0;
+    background-position: -128px 0;
 }
 
 .expandlayout {
-    background-position: -512px 0px;
+    background-position: -640px 0;
 }
 
 .shrinklayout {
-    background-position: -448px 0px;
+    background-position: -576px 0;
 }
 
 .startsimulation {
-    background-position: -128px 0px;
+    background-position: -256px 0;
 }
 
 .pausesimulation {
-    background-position: -192px 0px;
+    background-position: -320px 0;
 }
 
 .stopsimulation {
-    background-position: -256px 0px;
+    background-position: -384px 0;
 }
 
 .gonextstep {
-    background-position: -320px 0px;
+    background-position: -448px 0;
 }
 
 .addnode {
-  background-position: -384px 0px;
+  background-position: -512px 0;
 }
+
+.zoomin {
+  background-position: 0 0;
+}
+
+.zoomout {
+  background-position: -64px 0;
+}
+
 
 .center {
     text-align: center;

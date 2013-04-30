@@ -25,6 +25,12 @@ ENV = typeof ENV !== 'undefined' ? ENV : {
     node_font_size: 17,
     node_font: "Arial",
     node_radius: 22,
+    large_node_radius: 22,
+    large_node_font_size: 17,
+    large_edge_stroke_width: 5,
+    small_node_radius: 2,
+    small_node_font_size: 3,
+    small_edge_stroke_width: 0.5,
     edge_color: "#a1a1a1",
     edge_stroke_width: 5,
     edge_color_current: "white",
@@ -47,7 +53,9 @@ ENV = typeof ENV !== 'undefined' ? ENV : {
     layout_big: 1,
     msg_bgcolor: "#54924F",
     msg_fgcolor: "#f1f1f1",
-    msg_fontsize: 18
+    msg_fontsize: 18,
+    large: 1,
+    small: 0
 };
 
 ENV.layout[0] = {};

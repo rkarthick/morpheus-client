@@ -72,6 +72,19 @@ define([
             }
         },
 
+        changeZoom: function () {
+            if (this.controllerFor('network').zoomLevel === ENV.large) {
+                this.controllerFor('network').zoomLevel = ENV.small;
+                $(".zoomout").addClass("zoomin");
+                $(".zoomout").removeClass("zoomout");
+            } else {
+                this.controllerFor('network').zoomLevel = ENV.large;
+                $(".zoomin").addClass("zoomout");
+                $(".zoomin").removeClass("zoomin");
+            }
+            this.controllerFor('network').changeZoom();
+        },
+
         executionFinished: function () {
             this.set("currentlyRunning", false);
             $(".addnode").removeClass("disabled");
@@ -105,7 +118,16 @@ define([
         },
 
         goNextStep: function () {
-            this.controllerFor("network").goToNextRound();
+            var networkController = this.controllerFor("network");
+            var startNextRound = function () {
+                if (networkController.isAnimationComplete()) {
+                    networkController.goToNextRound();
+                } else {
+                    setTimeout(startNextRound, 50);
+                    return;
+                }
+            }
+            startNextRound();
         },
 
         startSimulations: function () {

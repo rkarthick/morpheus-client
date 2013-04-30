@@ -587,9 +587,18 @@ define([
                 );
             }
 
-
-
             $('html, body').animate({scrollTop: (sign * ENV.canvas_height_big)}, '50');
+        },
+
+        changeZoom: function () {
+            var key;
+            for (key in this.nodes) {
+                if (this.nodes.hasOwnProperty(key)) {
+                    var node = this.nodes[key];
+                    node.changeSize();
+                }
+            }
+            paper.view.draw();
         },
 
         changeLayout: function (layout) {

@@ -18,6 +18,7 @@ define([
         pauseSimulationFlag: false,
         killSimulationFlag: false,
         showMessagesFlag: true,
+        zoomLevel: ENV.large,
 
         areMessagesVisible: function () {
             return this.showMessagesFlag;
@@ -38,6 +39,20 @@ define([
                 );
             }
             this.nodes = {};
+        },
+
+        changeZoom: function () {
+            if (this.zoomLevel === ENV.small) {
+                ENV.node_radius = ENV.small_node_radius;
+                ENV.node_font_size = ENV.small_node_font_size;
+                ENV.edge_stroke_width = ENV.small_edge_stroke_width;
+            } else {
+                ENV.node_radius = ENV.large_node_radius;
+                ENV.node_font_size = ENV.large_node_font_size;
+                ENV.edge_stroke_width = ENV.large_edge_stroke_width;
+            }
+
+            this.get("view").changeZoom();
         },
 
         cancelSimulation: function () {

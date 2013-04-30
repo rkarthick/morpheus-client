@@ -106,8 +106,10 @@ define([
             this._super();
             this.ed = [];
 
-            var myCircle = new paper.Path.Circle(new paper.Point(this.x, this.y),
-                ENV.node_radius);
+            var myCircle = new paper.Path.Circle(
+                new paper.Point(this.x, this.y),
+                ENV.node_radius
+            );
             myCircle.fillColor = ENV.node_bgcolor;
             myCircle.nodeId = this.nodeId;
 
@@ -219,6 +221,26 @@ define([
             };
 
             setTimeout(removeAfterSometime, ENV.shout_delay);
+        },
+
+        changeSize: function () {
+            var center = this.uiObject.children[0].bounds.center;
+
+            this.uiObject.children[0].bounds.height = ENV.node_radius * 2;
+            this.uiObject.children[0].bounds.width = ENV.node_radius * 2;
+            this.uiObject.children[1].characterStyle.fontSize = ENV.node_font_size;
+
+            this.uiObject.children[0].bounds.center = center;
+            this.uiObject.children[1].center = center;
+
+            this.uiObject.children[1].bounds.center = new paper.Point(
+                center.x,
+                center.y - (ENV.node_font_size / 4)
+            );
+
+            this.ed.forEach(function (edge) {
+                edge.strokeWidth = ENV.edge_stroke_width;
+            });
         },
 
         remove: function () {
