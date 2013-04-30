@@ -24,6 +24,14 @@
     </head>
     <body>
     <script type="text/x-handlebars" data-template-name="application">
+        <div class="row mainbody">
+            <div class="center">
+                <h1>Morpheus</h1>
+                Visual Algorithm Simulator for a Synchronous Distributed System
+            </div>
+        </div>
+
+
         <div class="simulatorcontainer">
             <div class="row">
                 <div id="editor_container" class="six columns">
@@ -77,8 +85,9 @@
         </div>
 
         <div class="row mainbody">
-            <div class="two columns">
-                <h1>Morpheus</h1>
+            <div class="main_footer center">
+                Examples: <a title="Leader in a ring" class="link" {param="ring"} {{ action "loadRing"}}>Leader in a Ring</a> | <a title="Leader in a line"  {{ action "loadLine"}}>Leader in a Line</a>
+
             </div>
         </div>
 

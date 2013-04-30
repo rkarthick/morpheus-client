@@ -128,7 +128,7 @@ define([
                     setTimeout(startNextRound, 50);
                     return;
                 }
-            }
+            };
             startNextRound();
         },
 
@@ -177,6 +177,16 @@ define([
                 return;
             }
             this.controllerFor("network").createNewNodeFromDialog();
+        },
+
+        loadRing: function () {
+            this.controllerFor('template').render("ring");
+            this.controllerFor('algorithm').render("leaderring");
+        },
+
+        loadLine: function () {
+            this.controllerFor('template').render("line");
+            this.controllerFor('algorithm').render("leaderline");
         }
     });
 

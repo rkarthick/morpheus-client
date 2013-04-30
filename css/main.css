@@ -25,15 +25,38 @@ a {
   display: none;
 }
 
+.center {
+  text-align: center;
+}
+.right {
+  text-align: right;
+}
+
+.link {
+
+}
+
+
 .statusbarcontainer {
     width: 100%;
     background-color: #1a1a1a;
 }
 
+.mainbody h1 {
+  padding-bottom: 0px;
+  margin-bottom: 5px;
+  color: black;
+}
+
 .mainbody {
     background-color: white;
     /*minheight: 1000px;*/
-    padding: 10px;
+    padding: 10px 0px 20px 0px;
+}
+
+.main_footer  {
+  font-size: 1.3em;
+  padding: 20px;
 }
 
 .row {
@@ -182,10 +205,12 @@ select {
 
 /* Default Link Styles */
 a {
-  color: #3498db;
+  color: darkblue;
   text-decoration: none;
   line-height: inherit;
+  cursor: pointer;
 }
+
 
 a:hover, a:focus {
   color: #258cd1;
