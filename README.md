@@ -6,7 +6,7 @@ In a synchronous distributed system, an algorithm is executed in all the process
 Implementation Details
 ----------------------
 
-Morpheus is implemented  in Javascript using HTML5. The canvas is developed using HTML5 canvas and the the thread creation in executor module uses WebWorkers functionality. WebWorker and HTML5 canvas are very recently (in 2012) introduced in the W3C specification. Hence only latest versions browsers, Firefox (>= 3.5)$, Chrome (>= 4.0), Safari (>= 4.0) and IE (>= 10) support Webworkers.
+Morpheus is implemented  in Javascript using HTML5. The canvas is developed using HTML5 canvas and the the thread creation in executor module uses WebWorkers functionality. WebWorker and HTML5 canvas are very recently (in 2012) introduced in the W3C specification. Hence only latest versions browsers, Firefox (>= 3.5), Chrome (>= 4.0), Safari (>= 4.0) and IE (>= 10) support Webworkers.
 
 Morpheus also uses a variety of javascript libraries to aid the Rapid Application Development.
 
