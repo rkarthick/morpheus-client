@@ -1,9 +1,7 @@
 
 // TODO:
 // 1. Make this singleton pattern
-// 2. Currently this script handles ember objects, may be an ember api
-//    rather than playing with ember objects directly here
-// 3. Add functionality to add special variables for special nodes
+// 2. Add functionality to add special variables for special nodes
 
 define([
     'env',
