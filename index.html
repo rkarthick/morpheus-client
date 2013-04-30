@@ -23,6 +23,7 @@
         </script>
     </head>
     <body>
+    <a href="https://github.com/rkarthick/morpheus-client"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
     <script type="text/x-handlebars" data-template-name="application">
         <div class="row mainbody">
             <div class="center">
@@ -87,8 +88,13 @@
         <div class="row mainbody">
             <div class="main_footer center">
                 Examples: <a title="Leader in a ring" class="link" {param="ring"} {{ action "loadRing"}}>Leader in a Ring</a> | <a title="Leader in a line"  {{ action "loadLine"}}>Leader in a Line</a>
-
             </div>
+        </div>
+        <div class="row mainbody">
+            <div class="footer">
+            Powered by <a href="http://emberjs.com/" target="_blank">Ember.js</a>, <a href="http://ace.ajax.org/" target="_blank">Ace</a> and <a href="http://paperjs.org/" target="_blank">Paper.js</a>
+            </div>
+        </div>
         </div>
 
         {{ outlet }}

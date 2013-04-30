@@ -59,6 +59,14 @@ a {
   padding: 20px;
 }
 
+.footer {
+  padding: 10px 0px 10px 0px;
+  font-size: 0.9em;
+  border-top: 1px dotted black;
+  text-align: center;
+  line-height: 1.3em;
+}
+
 .row {
     width: 1115px;
     max-width: 1115px;
