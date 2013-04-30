@@ -1,7 +1,7 @@
 Morpheus
 ========
 
-Demo: http://www.csd.uwo.ca/~kramach/morpheus
+Demo: http://rkarthick.github.io/morpheus-client/
 
 In a synchronous distributed system, an algorithm is executed in all the processors simultaneously. The understanding  and the analysis of the algorithm execution in a distributed environment can be quite challenging. Morpheus is an interactive visual algorithm simulation system for a distributed synchronous network, that can be used as a tool for algorithm visualization and simulation. The effectiveness of any learning tool is dependent on the amount of user engagement. Morpheus increases user engagement by providing the user flexibility to create and run their own algorithms in a custom network configuration specified by the user. 
 
