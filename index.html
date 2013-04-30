@@ -86,10 +86,143 @@
         </div>
 
         <div class="row mainbody">
-            <div class="main_footer center">
+            <div class="center" id="examples">
                 Examples: <a title="Leader in a ring" class="link" {param="ring"} {{ action "loadRing"}}>Leader in a Ring</a> | <a title="Leader in a line"  {{ action "loadLine"}}>Leader in a Line</a>
             </div>
         </div>
+        <div class="row">
+                <!--
+
+        <section id="menu">
+            <nav>
+                <a href="#installation">Install</a>
+                <a href="#libraries">Libraries Used</a>
+                <a href="#alg">Algorithm Format</a>
+                <a href="#node">Node API</a>
+                <a href="#chitecture">Architecture</a>
+            </nav>
+        </section>-->
+        </div>
+        <div class="row mainbody">
+            <div id="description"><p>
+                <em>Morpheus</em> is an interactive visual algorithm simulation system for a distributed synchronous network. That is, it simulates the execution of algorithm entered in the editor (left) in each nodes created in the canvas (right).</p>
+
+                <h2>Install</h2>
+                <p>Morpheus can execute on all the browsers that support HTML5 canvas and Webworker. So please make sure you have one of the following browsers before deploying. Firefox (&gt;= 3.5), Chrome (&gt;= 4.0), Safari (&gt;= 4.0) and IE (&gt;= 10).</p>
+
+                For running the server locally you will also need Python (2.x).
+
+                <ul>
+                    <li><span class="verb">$ git clone git://github.com/rkarthick/morpheus-client.git</span></li>
+                    <li><span class="verb">$ cd morpheus-client</span></li>
+                    <li><span class="verb">$ bin/server </span></li>
+                    <li>Open http://localhost:3000 in a browser to start working in the Morpheus system.</li>
+                </ul>
+
+                <h2>Libraries Used</h2>
+                <p>Morpheus is implemented  in Javascript using HTML5. The canvas is developed using HTML5 canvas and the the thread creation in executor module uses WebWorkers functionality. WebWorker and HTML5 canvas are very recently (in 2012) introduced in the W3C specification. Hence only latest versions browsers, Firefox (&gt;= 3.5), Chrome (&gt;= 4.0), Safari (&gt;= 4.0) and IE (&gt;= 10) support Webworkers.</p>
+
+                <p>Morpheus also uses a variety of javascript libraries to aid the Rapid Application Development.</p>
+
+<ol>
+<li>jquery.js: Provides browser independent layer over Javascript for accessing DOM (Document Object Model) elements in HTML.</li>
+<li>require.js: Enables dependency specification while loading of javascript libraries during execution.</li>
+<li>paper.js: Provides path, circle and image abstractions to basic shapes in HTML5. Also provides events to drag and drop nodes and enables animation.</li>
+<li>ember.js: Ember library provides MVC skeleton for javascript files.</li>
+<li>aceeditor.js: The editor used in the application is the open source $aceeditor$ that comes with out of the box syntax highlighting and error reporting.</li>
+<li>Modernizr.js: Lets the developer to test if the browser has canvas and webworker functionality.</li>
+</ol>
+
+
+                <h2>Algorithm Format</h2>
+                <p>The structure of an algorithm in a  synchronous distributed system is given in the below algorithm.  </p>
+
+                <pre>
+                    var init_data = 0;
+                    var i = 1;
+                    ..
+                    ..
+                    while (1) {
+                        if (stopping_condition === true) {
+                            exit;
+                        }
+                        ...
+                        ...
+                        if (messagesToReceive()) {
+                            data = receive();
+                            ...
+                            ...
+                        }
+                        ...
+                    }
+                </pre>
+                <p>
+        The algorithm initializes data in the first few steps and <span class="verb">while (1)</span> denotes the start of a <strong>round</strong>. A round is a set of instructions in a node. All nodes complete a round at the same time. A round typically contains logic to <strong>receive messages</strong> from other nodes and act based on the recieved messages. </p>
+
+        All nodes start and end a single round at the same time (as this is a <a href="http://books.google.ca/books?id=2wsrLg-xBGgC&lpg=PP1&dq=synchronous%20distributed%20systems%20lynch&pg=PA8#v=onepage&q&f=false" target="_blank">synchronous distributed system</a>).
+
+        <h2>Node API</h2>
+        Each node has a set of functions it has access. They are inturn can be called by the algorithm.
+        <ul>
+    <li> <span class="verb">getId()</span>: Returns the node id of the calling processor.
+    </li>
+    <li> <span class="verb">getNeighbours()</span>: Returns the neighbours of the calling processor. The neighbours are sorted according to their position with respect to the node in a X, Y co-ordinate starting from the Y axis (Figure 1). The numbers inside the node in below figure denote their index in the neighbours array.
+        <br/>
+        <img src="css/images/coordinates.png" alt="neighbours Sorting"/>
+    </li>
+    <li> <span class="verb">messagesToReceive()</span>: Returns true or false depending on if there are messages to receive
+    </li>
+    <li> <span class="verb">receive()</span>: Returns the next message object in the message queue for that node. The message object has the following properties: fromNode, specifying the source of the message and message, specifying the contents.
+    </li>
+    <li> <span class="verb">send(node_id, msg)</span>: Sends the msg to the node specified by node_id.
+    </li>
+    <li> <span class="verb">setColor(bgColor, fgColor)</span>: Changes the color of the current node with the background color specified by bgColor and foreground color specified by fgColor.
+    </li>
+    <li> <span class="verb">shout(msg)</span>: Displays a message, msg, closer to the node. This will be useful for communicating the node's status with the user.
+    </li>
+    <li> <span class="verb">exit</span>: This function is called when the node needs to terminate its execution.</li>
+    <li> <span class="verb">getTemplateHelper()</span>: Returns the neighbor-relationship with respect to the template.</li>
+        </ul>
+
+        <h2>Architecture</h2>
+        <p>Morpheus is built using the principles of Model − View − Controller (<a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" target="_blank">MVC</a>) architecture pattern. MVC contains self-contained data expressed through models with UI in the form of views. The controller contains the logic that dictates how the view and data should behave and respond to events. Morpheus  has the following components; Model, Controller, View, Plugins and Executor. </p>
+        <img src="css/images/architecture.png" alt="Architecture of Morpheus"/>
+
+        <h3>Model</h3>
+<p>The model component is responsible for storing the data in a predefined data structure structure that is used in the simulation of the network. It consists of the following entities:</p>
+    <ul>
+        <li>Network: The network model contains collection of nodes, collection of edges, collection of active messages, number of rounds passed and the actual algorithm that needs to be executed. At a given point of time the network model can be queried to view the currently active messages.</li>
+        <li> Node: The node represents the individual node in a network. It consists of its id, collection of edges and the messages that are currently delivered to the node. The edges can be queried to get the neighbors of the node. </li>
+        <li>  Edge: A individual edge can connect only two nodes. Hence it has the firstEnd denoted by a node and secondEnd denoted by another node. </li>
+        <li> Messages: This data structure represents an individual message. When a message is created by a node its fromNode is set the to source that has created the messages, and toNode is set to its destination. The delivered flag is set to true once the message is delivered and contents contain the data of the message.</li>
+    </ul>
+
+    <h3>View</h3>
+    <p>The view component represents the network canvas that is available for the user. When a user creates a node using the +(Add) button, the view signals the controller which in turn updates the Network and Node model accordingly. The view also enables the user to create new edges. There are following views in Morpheus:</p>
+
+    <ul>
+        <li>NetworkView: Network view contains the logic for displaying the individual nodes and responding to events at the network level. It is also responsible for displaying the number of rounds in the banner on the top right hand corner. The animation of the message flowing between the nodes is also performed by the NetworkView.</li>
+        <li>NodeView: The node view handles events at the node level. It is responsible for rendering the node along with the text in the canvas. It provides the functions to move the node, change the color and also display the message box for the shout(msg) API provided to the algorithm. NodeView also contains functionality for deleting all the edges incident on that node, when a node is deleted.</li>
+    </ul>
+
+    <h3>Controller</h3>
+    <p>The controller ties the view and data together. It updates the model using the data provided by the view. It handles events from the view and executes the corresponding function based on that. Similar to views there are NetworkController and NodeController in the system. The network controller also changes the state of the node based on the signals received from the executor module. The node controller provides functions to the network controller to change its state. </p>
+
+
+    <h3>Executor</h3>
+    <p>The executor module is responsible for simulating execution of algorithms in a synchronous distributed system. It also notifies the controller about the node state after each node, so that the view and the model can be updated accordingly.</p>
+
+    <p> The synchronous distributed system can be simulated in an asynchronous environment using synchronizers. A synchronizer makes sure that a new round is started only after all the messages from the previous rounds are received.</p>
+
+    <h3>Plugin</h3>
+
+    <p>The plugin component enables the development of new network templates without the need of altering the main code base. The controller module expects each template plugin to implement render() method. The render() method is responsible for creating the network. The method returns an object which will be returned to the algorithm when, getTemplateHelper() is invoked.</p>
+    <p>For eg.: In ring plugin, render method, gets the number of nodes for the ring. Then it calculates the position of each node in the circumference of a predefined invisible circle in the canvas and places the node in the circumference. It also creates the edges connecting all the nodes. Finally render method returns the object left and right node for each node, which is used by the algorithm to find its neighbor’s relationship with the current node.</p>
+
+
+            </div>
+        </div>
+
         <div class="row mainbody">
             <div class="footer">
             Powered by <a href="http://emberjs.com/" target="_blank">Ember.js</a>, <a href="http://ace.ajax.org/" target="_blank">Ace</a> and <a href="http://paperjs.org/" target="_blank">Paper.js</a>

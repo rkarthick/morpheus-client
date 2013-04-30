@@ -54,9 +54,32 @@ a {
     padding: 10px 0px 20px 0px;
 }
 
-.main_footer  {
+#examples  {
   font-size: 1.3em;
   padding: 20px;
+}
+
+#description {
+  padding: 10px 10px 10px 30px;
+  font-size: 1.1em;
+  line-height: 1.3em;
+
+}
+
+#description ul {
+  padding: 10px 20px 10px 30px;
+}
+
+#description h2 {
+  margin-top: 20px;
+}
+
+#description ul li {
+  margin: 5px 10px 10px 30px;
+}
+
+.verb {
+  font-family: courier;
 }
 
 .footer {
@@ -98,11 +121,23 @@ a {
     height: 52px;
 }
 
-.navbar {
-    padding: 8px;
-    background-color: #143352;
+nav {
+    padding: 15px;
+    background-color: #5a5a5a;
     color: white;
 }
+nav a {
+  color: #f1f1f1;
+  cursor: pointer;
+  padding: 15px 20px 15px 20px;
+  font-size: 1.2em;
+}
+
+nav a:hover {
+  color: white;
+  background-color: black;
+}
+
 
 .statusbar .columns {
     padding-left: 10px !important;
