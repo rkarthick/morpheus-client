@@ -17,6 +17,10 @@ a {
   cursor: pointer;
 }
 
+canvas {
+  z-index: 100;
+}
+
 a:hover {
   color: #258cd1;
 }

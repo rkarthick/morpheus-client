@@ -178,10 +178,12 @@ define([
 
         changeLayout: function () {
             if (this.currentLayout === ENV.layout_small) {
+                ENV.current_layout = ENV.large;
                 this.currentLayout = ENV.layout_big;
                 $(".expandlayout").addClass("shrinklayout");
                 $(".expandlayout").removeClass("expandlayout");
             } else {
+                ENV.current_layout = ENV.small;
                 this.currentLayout = ENV.layout_small;
                 $(".shrinklayout").addClass("expandlayout");
                 $(".expandlayout").removeClass("shrinklayout");

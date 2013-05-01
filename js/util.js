@@ -40,24 +40,38 @@ $(document).unbind('keydown').bind('keydown', function (event) {
     }
 });
 
-// from lesscss.org
+// inspired from lesscss.org
 var postRenderScripts = function () {
     var menu = document.getElementById("menu");
     var init = menu.offsetTop;
+    var offsetTop = init + ENV.canvas_height_big + $("#example_container").height() + 30;
     var docked;
+    var lastLayout;
 
     var scrollTop = function () {
         return document.body.scrollTop || document.documentElement.scrollTop;
-    }
+    };
+
     window.onscroll = function () {
-        if (!docked && (menu.offsetTop - scrollTop() < 0)) {
+        var offset = init;
+        if (ENV.current_layout === ENV.large) {
+            offset = offsetTop;
+        }
+
+        if (lastLayout !== ENV.current_layout) {
+            docked = true;
+        }
+        lastLayout = ENV.current_layout;
+
+
+        if (!docked && (offset - scrollTop() < 0)) {
             menu.style.top = 0;
             menu.style.position = 'fixed';
             menu.className = 'docked';
             docked = true;
-        } else if (docked && scrollTop() <= init) {
+        } else if (docked && scrollTop() <= offset) {
             menu.style.position = 'absolute';
-            menu.style.top = init + 'px';
+            menu.style.top = offset + 'px';
             menu.className = menu.className.replace('docked', '');
             docked = false;
         }
