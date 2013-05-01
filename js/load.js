@@ -2,7 +2,8 @@ requirejs.config({
     shim: {
         'libs/ember': ['libs/jquery'],
         'libs/ember-data': ['libs/ember'],
-        'util': ['libs/jquery-ui']
+        'util': ['libs/jquery-ui'],
+        'libs/jquery-numeric', ['libs/jquery']
 //        'core': ['libs/ember', 'libs/ember-data', 'libs/paper', 'env']
     }
 });

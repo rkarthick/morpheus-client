@@ -54,6 +54,7 @@ define([
 
     App.rootcontroller = null;
 
+
     // setup application controller for handling events in the page
     App.ApplicationController = Ember.Controller.extend({
         currentlyRunning: false,
