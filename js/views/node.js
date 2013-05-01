@@ -122,6 +122,7 @@ define([
                 fillColor: ENV.node_fgcolor
             };
 
+            ENV.ctx.textBaseline = "middle";
             text.bounds.center = new paper.Point(
                 this.x,
                 this.y - (ENV.node_font_size / 4)

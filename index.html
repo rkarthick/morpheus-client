@@ -25,13 +25,12 @@
     <body>
     <a href="https://github.com/rkarthick/morpheus-client"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
     <script type="text/x-handlebars" data-template-name="application">
-        <div class="row mainbody">
-            <div class="center">
-                <h1>Morpheus</h1>
-                Visual Algorithm Simulator for a Synchronous Distributed System
+        <div class="row" id="header">
+            <div class="column twelve">
+                <a name="home"><h1 class="logo">Morpheus</h1></a>
+                <span id="caption">Visual Algorithm Simulator</span>
             </div>
         </div>
-
 
         <div class="simulatorcontainer">
             <div class="row">
@@ -91,24 +90,23 @@
             </div>
         </div>
         <div class="row">
-                <!--
-
         <section id="menu">
             <nav>
-                <a href="#installation">Install</a>
-                <a href="#libraries">Libraries Used</a>
-                <a href="#alg">Algorithm Format</a>
-                <a href="#node">Node API</a>
-                <a href="#chitecture">Architecture</a>
+                <a href="#home">Home</a>
+                <a href="#install">Install</a>
+                <a href="#library">Libraries Used</a>
+                <a href="#algorithm">Algorithm Format</a>
+                <a href="#api">Node API</a>
+                <a href="#architecture">Architecture</a>
             </nav>
-        </section>-->
+        </section>
         </div>
         <div class="row mainbody">
             <div id="description"><p>
                 <em>Morpheus</em> is an interactive visual algorithm simulation system for a distributed synchronous network. That is, it simulates the execution of algorithm entered in the editor (left) in each nodes created in the canvas (right).</p>
 
-                <h2>Install</h2>
-                <p>Morpheus can execute on all the browsers that support HTML5 canvas and Webworker. So please make sure you have one of the following browsers before deploying. Firefox (&gt;= 3.5), Chrome (&gt;= 4.0), Safari (&gt;= 4.0) and IE (&gt;= 10).</p>
+                <a name="install"><h2>Install</h2></a>
+                <p>Morpheus can execute on all the browsers that support HTML5 canvas and <strong>Webworker</strong>. So please make sure you have one of the following browsers before deploying. Firefox (&gt;= 3.5), Chrome (&gt;= 4.0), Safari (&gt;= 4.0) and IE (&gt;= 10).</p>
 
                 For running the server locally you will also need Python (2.x).
 
@@ -119,7 +117,7 @@
                     <li>Open http://localhost:3000 in a browser to start working in the Morpheus system.</li>
                 </ul>
 
-                <h2>Libraries Used</h2>
+                <a name="library"><h2>Libraries Used</h2></a>
                 <p>Morpheus is implemented  in Javascript using HTML5. The canvas is developed using HTML5 canvas and the the thread creation in executor module uses WebWorkers functionality. WebWorker and HTML5 canvas are very recently (in 2012) introduced in the W3C specification. Hence only latest versions browsers, Firefox (&gt;= 3.5), Chrome (&gt;= 4.0), Safari (&gt;= 4.0) and IE (&gt;= 10) support Webworkers.</p>
 
                 <p>Morpheus also uses a variety of javascript libraries to aid the Rapid Application Development.</p>
@@ -129,12 +127,12 @@
 <li>require.js: Enables dependency specification while loading of javascript libraries during execution.</li>
 <li>paper.js: Provides path, circle and image abstractions to basic shapes in HTML5. Also provides events to drag and drop nodes and enables animation.</li>
 <li>ember.js: Ember library provides MVC skeleton for javascript files.</li>
-<li>aceeditor.js: The editor used in the application is the open source $aceeditor$ that comes with out of the box syntax highlighting and error reporting.</li>
+<li>aceeditor.js: The editor used in the application is the open source aceeditor that comes with out of the box syntax highlighting and error reporting.</li>
 <li>Modernizr.js: Lets the developer to test if the browser has canvas and webworker functionality.</li>
 </ol>
 
 
-                <h2>Algorithm Format</h2>
+                <a name="algorithm"><h2>Algorithm Format</h2></a>
                 <p>The structure of an algorithm in a  synchronous distributed system is given in the below algorithm.  </p>
 
                 <pre>
@@ -161,7 +159,7 @@
 
         All nodes start and end a single round at the same time (as this is a <a href="http://books.google.ca/books?id=2wsrLg-xBGgC&lpg=PP1&dq=synchronous%20distributed%20systems%20lynch&pg=PA8#v=onepage&q&f=false" target="_blank">synchronous distributed system</a>).
 
-        <h2>Node API</h2>
+        <a name="api"><h2>Node API</h2></a>
         Each node has a set of functions it has access. They are inturn can be called by the algorithm.
         <ul>
     <li> <span class="verb">getId()</span>: Returns the node id of the calling processor.
@@ -184,7 +182,7 @@
     <li> <span class="verb">getTemplateHelper()</span>: Returns the neighbor-relationship with respect to the template.</li>
         </ul>
 
-        <h2>Architecture</h2>
+        <a name="architecture"><h2>Architecture</h2></a>
         <p>Morpheus is built using the principles of Model − View − Controller (<a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" target="_blank">MVC</a>) architecture pattern. MVC contains self-contained data expressed through models with UI in the form of views. The controller contains the logic that dictates how the view and data should behave and respond to events. Morpheus  has the following components; Model, Controller, View, Plugins and Executor. </p>
         <img src="css/images/architecture.png" alt="Architecture of Morpheus"/>
 

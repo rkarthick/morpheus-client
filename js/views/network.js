@@ -637,6 +637,8 @@ define([
             paper.view.draw();
 
             this.get("controller").setView(this);
+
+            postRenderScripts();
         }
     });
 });

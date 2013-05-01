@@ -30,6 +30,28 @@ define([
 
     });
 
+    // Router
+    App.Router.map(function () {
+        this.resource('home', function () {
+            // do nothing
+        });
+        this.resource('install', function () {
+            // do nothing
+        });
+        this.resource('library', function () {
+            // do nothing
+        });
+        this.resource('algorithm', function () {
+            // do nothing
+        });
+        this.resource('api', function () {
+            // do nothing
+        });
+        this.resource('architecture', function () {
+            // do nothing
+        });
+    });
+
     App.rootcontroller = null;
 
     // setup application controller for handling events in the page
