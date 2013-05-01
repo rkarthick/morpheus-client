@@ -3,7 +3,7 @@ requirejs.config({
         'libs/ember': ['libs/jquery'],
         'libs/ember-data': ['libs/ember'],
         'util': ['libs/jquery-ui'],
-        'libs/jquery-numeric', ['libs/jquery']
+        'libs/jquery-numeric': ['libs/jquery']
 //        'core': ['libs/ember', 'libs/ember-data', 'libs/paper', 'env']
     }
 });
