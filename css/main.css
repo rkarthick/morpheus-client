@@ -42,7 +42,7 @@ h1.logo {
   font-size: 3em;
   padding: 0px;
   margin: 0px 0px 7px 0px;
-  color: black;
+  color: white;
 }
 
 span#caption {
@@ -56,9 +56,9 @@ span#caption {
 }
 
 #header {
-  background-color: #B3D5D8;
+  background-color: black;
   padding: 10px 0px 20px 15px;
-  color: black;
+  color: white;
 }
 
 .mainbody {
